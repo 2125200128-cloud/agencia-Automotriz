@@ -1,0 +1,76 @@
+﻿@extends('plantilla.base')
+
+@section('dinamico')
+<section class="min-h-screen bg-black px-4 py-10 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl">
+        <div class="mb-8 border-l-4 border-white/30 pl-5">
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-zinc-300">Tabla administradores</p>
+            <h1 class="mt-3 text-3xl font-black text-white sm:text-4xl">Formulario de Administradores</h1>
+            <p class="mt-2 text-gray-400">El campo id es automatico y no se captura manualmente.</p>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_45px_rgba(255,255,255,0.10)] sm:p-8">
+            <form action="#" method="POST" class="space-y-6">
+                @csrf
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="nombres" class="mb-2 block text-sm font-bold text-white">nombres</label>
+                        <input type="text" id="nombres" name="nombres" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="apellidos" class="mb-2 block text-sm font-bold text-white">apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="correo" class="mb-2 block text-sm font-bold text-white">correo</label>
+                        <input type="text" id="correo" name="correo" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="usuario" class="mb-2 block text-sm font-bold text-white">usuario</label>
+                        <input type="text" id="usuario" name="usuario" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="contrasena" class="mb-2 block text-sm font-bold text-white">contrasena</label>
+                        <input type="text" id="contrasena" name="contrasena" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="imagen" class="mb-2 block text-sm font-bold text-white">imagen</label>
+                        <input type="text" id="imagen" name="imagen" placeholder="imagenes/administradores/foto.jpg" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                    </div>
+
+                    <div>
+                        <label for="rol" class="mb-2 block text-sm font-bold text-white">rol</label>
+                        <select id="rol" name="rol" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                            <option value="superadministrador">superadministrador</option>
+                            <option value="vendedor" selected>vendedor</option>
+                            <option value="capturista">capturista</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="estado" class="mb-2 block text-sm font-bold text-white">estado</label>
+                        <select id="estado" name="estado" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                            <option value="activo" selected>activo</option>
+                            <option value="inactivo">inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:justify-end">
+                    <button type="reset" class="rounded-xl border border-white/15 px-6 py-3 font-bold text-zinc-200 transition hover:border-white/30 hover:text-white hover:shadow-[0_0_22px_rgba(255,255,255,0.14)]">Limpiar</button>
+                    <button type="submit" class="rounded-xl bg-white px-8 py-3 font-black text-black transition hover:bg-zinc-200 hover:shadow-[0_0_30px_rgba(255,255,255,0.22)]">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@endsection
+
+
+

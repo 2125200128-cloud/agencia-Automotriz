@@ -1,0 +1,1 @@
+<?php namespace App\Http\Controllers; use Illuminate\Http\Request; class ProveedorController extends Controller { public function listado() { return view("proveedor.listado"); } public function formulario() { return view("proveedor.formulario"); } }
