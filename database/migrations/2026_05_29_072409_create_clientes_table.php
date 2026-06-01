@@ -9,6 +9,7 @@ return new class extends Migration {
             $table->string('nombres');
             $table->string('apellidos');
             $table->string('correo')->unique();
+            $table->string('telefono')->nullable();
             $table->string('contrasena');
             $table->text('direccion')->nullable();
             $table->string('imagen')->nullable();

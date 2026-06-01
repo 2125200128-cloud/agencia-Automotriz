@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Producto extends Model
 {
+    use HasFactory;
+
     protected $table = 'productos';
 
     public $timestamps = false;
@@ -15,8 +18,16 @@ class Producto extends Model
     protected $fillable = [
         'nombre', 'descripcion', 'numero_serie', 'anio', 'detalles', 'precio',
         'marca_id', 'modelo_id', 'tipo_id', 'color_id', 'proveedor_id',
-        'descuento', 'imagen_uno', 'imagen_dos', 'imagen_tres',
+        'existencia', 'descuento', 'imagen_uno', 'imagen_dos', 'imagen_tres', 'estado',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'precio' => 'decimal:2',
+            'descuento' => 'decimal:2',
+        ];
+    }
 
     public function marca(): BelongsTo
     {

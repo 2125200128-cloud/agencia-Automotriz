@@ -1,20 +1,33 @@
-<?php namespace App\Http\Controllers;
- use Illuminate\Http\Request;
-  class ClienteController 
-  extends Controller { public function listado() 
-  { return view("cliente.listado"); 
-  }
-  public function formulario()  
-  { 
-    return view("cliente.formulario"); 
-  } public function cita() 
-  { 
-    return view("cliente.cita");
-     } public function compra()
- {
-         return view("cliente.compra"); 
-    } public function misPedidos() 
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Cliente;
+use Illuminate\Http\Request;
+
+class ClienteController extends Controller
+{
+    public function listado()
     {
-         return view("cliente.mis-pedidos"); 
-    } 
+        return view('catalogos.listado', [
+            'titulo' => 'Clientes',
+            'descripcion' => 'Clientes registrados en la plataforma.',
+            'registros' => Cliente::query()->orderBy('nombres')->get(),
+            'columnas' => [
+                'id' => 'ID',
+                'nombres' => 'Nombres',
+                'apellidos' => 'Apellidos',
+                'correo' => 'Correo',
+                'telefono' => 'Telefono',
+                'direccion' => 'Direccion',
+                'estado' => 'Estado',
+            ],
+            'urlFormulario' => '/cliente/formulario',
+        ]);
     }
+
+    public function formulario()
+    {
+        return view('cliente.formulario');
+    }
+}

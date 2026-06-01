@@ -41,9 +41,6 @@ Route::get('/administrador/formulario', [AdministradorController::class, 'formul
 
 Route::get('/cliente', [ClienteController::class, 'listado']);
 Route::get('/cliente/formulario', [ClienteController::class, 'formulario']);
-Route::get('/cliente/cita', [ClienteController::class, 'cita']);
-Route::get('/cliente/compra', [ClienteController::class, 'compra']);
-Route::get('/cliente/mis-pedidos', [ClienteController::class, 'misPedidos']);
 
 Route::get('/pedido', [PedidoController::class, 'listado']);
 
@@ -55,8 +52,12 @@ Route::get('/proveedor/formulario', [ProveedorController::class, 'formulario']);
 
 Route::get('/pagos', [PagoController::class, 'listado']);
 
+Route::get('/marcas', [MarcaController::class, 'listado']);
 Route::get('/marcas/formulario', [MarcaController::class, 'formulario']);
+Route::get('/modelos', [ModeloController::class, 'listado']);
 Route::get('/modelos/formulario', [ModeloController::class, 'formulario']);
+Route::get('/colores', [ColorController::class, 'listado']);
 Route::get('/colores/formulario', [ColorController::class, 'formulario']);
+Route::get('/tipos', [TipoController::class, 'listado']);
 Route::get('/tipos/formulario', [TipoController::class, 'formulario']);
 Route::get('/productos-pedido/formulario', [ProductoPedidoController::class, 'formulario']);

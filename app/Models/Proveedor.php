@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Proveedor extends Model
 {
+    use HasFactory;
+
     protected $table = 'proveedores';
 
     public $timestamps = false;
@@ -17,6 +20,7 @@ class Proveedor extends Model
         'telefono',
         'correo',
         'direccion',
+        'estado',
     ];
 
     public function productos(): HasMany

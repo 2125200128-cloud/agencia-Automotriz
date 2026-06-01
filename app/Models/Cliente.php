@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cliente extends Model
 {
+    use HasFactory;
+
     protected $table = 'clientes';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'nombres', 'apellidos', 'correo', 'contrasena', 'direccion', 'imagen',
+        'nombres', 'apellidos', 'correo', 'telefono', 'contrasena', 'direccion', 'imagen', 'estado',
     ];
 
     protected $hidden = [

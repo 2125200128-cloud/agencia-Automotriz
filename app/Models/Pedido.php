@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,11 +10,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pedido extends Model
 {
+    use HasFactory;
+
+    protected $table = 'pedidos';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'cliente_id', 'fecha', 'descuento',
+        'cliente_id', 'fecha', 'descuento', 'iva', 'total', 'estado',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'fecha' => 'date',
+            'descuento' => 'decimal:2',
+            'iva' => 'decimal:2',
+            'total' => 'decimal:2',
+        ];
+    }
 
     public function cliente(): BelongsTo
     {

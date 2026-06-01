@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ProductoPedido extends Pivot
 {
+    use HasFactory;
+
     protected $table = 'productos_pedido';
 
     public $timestamps = false;
@@ -22,6 +25,14 @@ class ProductoPedido extends Pivot
         'precio',
         'descuento',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'precio' => 'decimal:2',
+            'descuento' => 'decimal:2',
+        ];
+    }
 
     public function pedido(): BelongsTo
     {

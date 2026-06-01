@@ -65,6 +65,21 @@
                 </div>
             </div>
 
+            <!-- CATALOGOS -->
+            <div class="group relative">
+                <a href="/marcas" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
+                    Catalogos
+                </a>
+                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
+                        <a href="/marcas" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Marcas</a>
+                        <a href="/modelos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Modelos</a>
+                        <a href="/colores" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Colores</a>
+                        <a href="/tipos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Tipos</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- ADMIN -->
             <div class="group relative">
                 <a href="/administrador" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
