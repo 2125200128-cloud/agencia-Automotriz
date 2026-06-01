@@ -19,10 +19,11 @@ return new class extends Migration {
             $table->foreignId('proveedor_id')->nullable()->constrained('proveedores')->nullOnDelete();
             $table->integer('existencia')->default(0);
             $table->decimal('descuento', 5, 2)->default(0);
-            $table->string('imagen_uno')->nullable();
-            $table->string('imagen_dos')->nullable();
-            $table->string('imagen_tres')->nullable();
+            $table->string('imagen_principal')->nullable();
+            $table->string('imagen_secundaria')->nullable();
+            $table->string('imagen_adicional')->nullable();
             $table->string('estado')->default('activo');
+            $table->timestamps();
         });
     }
     public function down(): void { Schema::dropIfExists('productos'); }

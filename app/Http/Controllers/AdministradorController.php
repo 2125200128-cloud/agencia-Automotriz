@@ -9,25 +9,35 @@ class AdministradorController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Administradores',
-            'descripcion' => 'Personal autorizado registrado en el sistema.',
-            'registros' => Administrador::query()->orderBy('nombres')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombres' => 'Nombres',
-                'apellidos' => 'Apellidos',
-                'correo' => 'Correo',
-                'usuario' => 'Usuario',
-                'rol' => 'Rol',
-                'estado' => 'Estado',
-            ],
-            'urlFormulario' => '/administrador/formulario',
+        return view('administrador.listado', [
+            'administradores' => Administrador::query()->orderBy('nombres')->get(),
         ]);
     }
 
     public function formulario()
     {
         return view('administrador.formulario');
+    }
+
+    public function store(Request $request)
+    {
+        $datos = $request->validate([
+            'nombres' => ['required', 'string', 'max:255'],
+            'apellidos' => ['required', 'string', 'max:255'],
+            'correo' => ['required', 'email', 'max:255', 'unique:administradores,correo'],
+            'usuario' => ['required', 'string', 'max:255', 'unique:administradores,usuario'],
+            'contrasena' => ['required', 'string', 'min:6'],
+            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
+            'rol' => ['required', 'in:superadministrador,vendedor,capturista'],
+            'estado' => ['required', 'in:activo,inactivo'],
+        ]);
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('administradores', 'public');
+        }
+
+        Administrador::create($datos);
+
+        return redirect('/administrador');
     }
 }

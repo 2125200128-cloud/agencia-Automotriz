@@ -12,12 +12,10 @@
         <div class="flex flex-wrap items-center gap-1 text-sm font-semibold">
             <a href="/" class="rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">Inicio</a>
             
-            <!-- PRODUCTOS -->
             <div class="group relative">
                 <a href="/producto" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Productos ▾
                 </a>
-                <!-- Puente invisible para que no se cierre al bajar el mouse -->
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
                         <a href="/producto" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Catálogo</a>
@@ -26,7 +24,6 @@
                 </div>
             </div>
 
-            <!-- CLIENTES -->
             <div class="group relative">
                 <a href="/cliente" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Clientes ▾
@@ -39,7 +36,6 @@
                 </div>
             </div>
 
-            <!-- PEDIDOS -->
             <div class="group relative">
                 <a href="/pedido" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Pedidos ▾
@@ -47,12 +43,13 @@
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
                         <a href="/pedido" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Historial de Pedidos</a>
-                        <a href="/productos-pedido/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Crear Pedido</a>
+                        <a href="/pagos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Historial de Pagos</a>
+                        <a href="/productos-pedido" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Productos por Pedido</a>
+                        <a href="/productos-pedido/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar Producto</a>
                     </div>
                 </div>
             </div>
 
-            <!-- PROVEEDORES -->
             <div class="group relative">
                 <a href="/proveedor" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Proveedores ▾
@@ -65,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- CATALOGOS -->
             <div class="group relative">
                 <a href="/marcas" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Catalogos
@@ -80,7 +76,6 @@
                 </div>
             </div>
 
-            <!-- ADMIN -->
             <div class="group relative">
                 <a href="/administrador" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Admin ▾

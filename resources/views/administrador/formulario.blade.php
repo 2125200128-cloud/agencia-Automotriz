@@ -10,7 +10,7 @@
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_45px_rgba(255,255,255,0.10)] sm:p-8">
-            <form action="#" method="POST" class="space-y-6">
+            <form action="/administrador" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <div class="grid gap-6 md:grid-cols-2">
@@ -41,7 +41,7 @@
 
                     <div>
                         <label for="imagen" class="mb-2 block text-sm font-bold text-white">imagen</label>
-                        <input type="text" id="imagen" name="imagen" placeholder="imagenes/administradores/foto.jpg" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                        <input type="file" id="imagen" name="imagen" accept="image/*" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>

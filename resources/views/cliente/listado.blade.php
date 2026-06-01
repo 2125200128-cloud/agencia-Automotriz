@@ -9,7 +9,6 @@
             <p class="mt-3 max-w-2xl text-gray-400">Busca y consulta los clientes registrados en la plataforma.</p>
         </div>
 
-        {{-- Barra de búsqueda --}}
         <div class="mt-8 rounded-xl border border-white/10 bg-zinc-950 p-5">
             <div class="grid gap-4 lg:grid-cols-[1fr_200px_auto]">
                 <div class="relative">
@@ -29,7 +28,6 @@
             </div>
         </div>
 
-        {{-- Resultados --}}
         <div class="mt-8 overflow-hidden rounded-xl border border-white/10 bg-zinc-950">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-gray-300">
@@ -92,7 +90,6 @@
                 </table>
             </div>
 
-            {{-- Sin resultados --}}
             <div id="sin-resultados" class="hidden p-12 text-center">
                 <svg class="mx-auto h-12 w-12 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
@@ -102,7 +99,6 @@
             </div>
         </div>
 
-        {{-- Modal de Perfil --}}
         <div id="modal-perfil" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="cerrarModal(event)">
             <div class="w-full max-w-lg rounded-2xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_60px_rgba(0,0,0,0.8)] sm:p-8" onclick="event.stopPropagation()">
                 <div class="flex items-start justify-between mb-6">
@@ -176,7 +172,6 @@
         document.getElementById('sin-resultados').classList.toggle('hidden', visibles > 0);
     }
 
-    // Datos de ejemplo para el modal
     const clientesData = {
         'Carlos Mendoza': { email: 'carlos.m@example.com', tel: '55 1234 5678', dir: 'Av. Insurgentes Sur 123, CDMX', registro: '15/05/2026', compras: '2 pedidos · $2,840,000', estado: 'Activo', avatar: 'https://ui-avatars.com/api/?name=Carlos+Mendoza&background=0D8ABC&color=fff&rounded=true&size=80' },
         'Ana Torres': { email: 'ana.torres@example.com', tel: '33 9876 5432', dir: 'Paseo Andares 45, Guadalajara', registro: '18/05/2026', compras: '1 pedido · $1,850,000', estado: 'Activo', avatar: 'https://ui-avatars.com/api/?name=Ana+Torres&background=E53E3E&color=fff&rounded=true&size=80' },

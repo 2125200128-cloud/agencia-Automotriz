@@ -26,4 +26,20 @@ class ColorController extends Controller
     {
         return view('colores.formulario');
     }
+
+    public function store(Request $request)
+    {
+        $datos = $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
+        ]);
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('colores', 'public');
+        }
+
+        Color::create($datos);
+
+        return redirect('/colores');
+    }
 }

@@ -11,8 +11,6 @@ class Administrador extends Model
 
     protected $table = 'administradores';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'nombres', 'apellidos', 'correo', 'usuario', 'contrasena', 'imagen', 'rol', 'estado',
     ];

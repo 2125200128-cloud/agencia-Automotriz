@@ -16,7 +16,6 @@
             <form action="#" method="POST" class="space-y-6">
                 @csrf
 
-                <!-- Información del Vehículo Seleccionado (lectura) -->
                 <div class="p-4 rounded-xl border border-white/10 bg-black/60 flex items-center gap-4 mb-6">
                     <div class="h-14 w-24 rounded bg-zinc-900 overflow-hidden flex-shrink-0 flex items-center justify-center">
                         <span class="text-xs text-gray-600 font-bold">Veloce</span>

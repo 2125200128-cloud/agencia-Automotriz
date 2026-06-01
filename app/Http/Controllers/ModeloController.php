@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ModeloVehiculo;
+use App\Models\Marca;
 use Illuminate\Http\Request;
 
 class ModeloController extends Controller
@@ -25,6 +26,25 @@ class ModeloController extends Controller
 
     public function formulario()
     {
-        return view('modelos.formulario');
+        return view('modelos.formulario', [
+            'marcas' => Marca::query()->orderBy('nombre')->get(),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $datos = $request->validate([
+            'marca_id' => ['required', 'exists:marcas,id'],
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
+        ]);
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('modelos', 'public');
+        }
+
+        ModeloVehiculo::create($datos);
+
+        return redirect('/modelos');
     }
 }

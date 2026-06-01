@@ -13,10 +13,9 @@
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_45px_rgba(255,255,255,0.10)] sm:p-8">
-            <form action="#" method="POST" class="space-y-6">
+            <form action="/proveedor" method="POST" class="space-y-6">
                 @csrf
                 <div class="space-y-8">
-                    <!-- Sección de Empresa -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Información de la Empresa</h3>
                         <div class="grid gap-6 md:grid-cols-2">
@@ -35,7 +34,6 @@
                         </div>
                     </div>
 
-                    <!-- Sección de Representante -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Representante Legal</h3>
                         <div class="grid gap-6 md:grid-cols-2">

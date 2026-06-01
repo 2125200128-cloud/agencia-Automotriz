@@ -11,7 +11,7 @@ class ModeloVehiculo extends Model
 {
     use HasFactory;
 
-    protected $table = 'modelos';
+    protected $table = 'modelos_vehiculos';
 
     public $timestamps = false;
 

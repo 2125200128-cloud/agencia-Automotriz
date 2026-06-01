@@ -18,34 +18,29 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Create Default User
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
-        // 2. Seed Marcas
         $bmw = Marca::create(['nombre' => 'BMW', 'imagen' => 'bmw.png']);
         $toyota = Marca::create(['nombre' => 'Toyota', 'imagen' => 'toyota.png']);
         $ford = Marca::create(['nombre' => 'Ford', 'imagen' => 'ford.png']);
         $chevrolet = Marca::create(['nombre' => 'Chevrolet', 'imagen' => 'chevrolet.png']);
         $mercedes = Marca::create(['nombre' => 'Mercedes-Benz', 'imagen' => 'mercedes.png']);
 
-        // 3. Seed Tipos (Category/Type of vehicle)
         $sedan = Tipo::create(['nombre' => 'Sedán', 'imagen' => 'sedan.png']);
         $suv = Tipo::create(['nombre' => 'SUV', 'imagen' => 'suv.png']);
         $deportivo = Tipo::create(['nombre' => 'Deportivo', 'imagen' => 'deportivo.png']);
         $pickup = Tipo::create(['nombre' => 'Pick-up', 'imagen' => 'pickup.png']);
         $hatchback = Tipo::create(['nombre' => 'Hatchback', 'imagen' => 'hatchback.png']);
 
-        // 4. Seed Colores
         $rojo = Color::create(['nombre' => 'Rojo', 'imagen' => 'rojo.png']);
         $azul = Color::create(['nombre' => 'Azul Metálico', 'imagen' => 'azul.png']);
         $negro = Color::create(['nombre' => 'Negro Obsidiana', 'imagen' => 'negro.png']);
         $blanco = Color::create(['nombre' => 'Blanco Perlado', 'imagen' => 'blanco.png']);
         $gris = Color::create(['nombre' => 'Gris Grafito', 'imagen' => 'gris.png']);
 
-        // 5. Seed Proveedores
         $prov1 = Proveedor::create([
             'nombre' => 'AutoDistribuidora Global',
             'contacto' => 'Ing. Roberto Silva',
@@ -87,7 +82,6 @@ class DatabaseSeeder extends Seeder
             'estado' => 'activo'
         ]);
 
-        // 6. Seed Administradores
         Administrador::create([
             'nombres' => 'Carlos',
             'apellidos' => 'Gómez',
@@ -119,7 +113,6 @@ class DatabaseSeeder extends Seeder
             'estado' => 'activo'
         ]);
 
-        // 7. Seed Clientes
         Cliente::create([
             'nombres' => 'Juan',
             'apellidos' => 'Pérez',
@@ -171,7 +164,6 @@ class DatabaseSeeder extends Seeder
             'estado' => 'activo'
         ]);
 
-        // 8. Seed Modelos
         $m5 = ModeloVehiculo::create(['marca_id' => $bmw->id, 'nombre' => 'M5', 'imagen' => 'm5.png']);
         $x5 = ModeloVehiculo::create(['marca_id' => $bmw->id, 'nombre' => 'X5', 'imagen' => 'x5.png']);
         
@@ -187,7 +179,6 @@ class DatabaseSeeder extends Seeder
         $cclass = ModeloVehiculo::create(['marca_id' => $mercedes->id, 'nombre' => 'C-Class', 'imagen' => 'cclass.png']);
         $gle = ModeloVehiculo::create(['marca_id' => $mercedes->id, 'nombre' => 'GLE', 'imagen' => 'gle.png']);
 
-        // 9. Seed Productos
         Producto::create([
             'nombre' => 'Ford Mustang GT Fastback',
             'descripcion' => 'Deportivo icónico americano con motor V8 de 5.0L.',
@@ -202,7 +193,7 @@ class DatabaseSeeder extends Seeder
             'proveedor_id' => $prov2->id,
             'existencia' => 3,
             'descuento' => 5.00,
-            'imagen_uno' => 'mustang1.jpg',
+            'imagen_principal' => 'mustang1.jpg',
             'estado' => 'activo'
         ]);
 
@@ -220,7 +211,7 @@ class DatabaseSeeder extends Seeder
             'proveedor_id' => $prov1->id,
             'existencia' => 10,
             'descuento' => 0.00,
-            'imagen_uno' => 'corolla1.jpg',
+            'imagen_principal' => 'corolla1.jpg',
             'estado' => 'activo'
         ]);
 
@@ -238,7 +229,7 @@ class DatabaseSeeder extends Seeder
             'proveedor_id' => $prov4->id,
             'existencia' => 2,
             'descuento' => 2.50,
-            'imagen_uno' => 'x5_1.jpg',
+            'imagen_principal' => 'x5_1.jpg',
             'estado' => 'activo'
         ]);
 
@@ -256,7 +247,7 @@ class DatabaseSeeder extends Seeder
             'proveedor_id' => $prov5->id,
             'existencia' => 5,
             'descuento' => 4.00,
-            'imagen_uno' => 'silverado1.jpg',
+            'imagen_principal' => 'silverado1.jpg',
             'estado' => 'activo'
         ]);
 
@@ -274,7 +265,7 @@ class DatabaseSeeder extends Seeder
             'proveedor_id' => $prov3->id,
             'existencia' => 4,
             'descuento' => 0.00,
-            'imagen_uno' => 'cclass1.jpg',
+            'imagen_principal' => 'cclass1.jpg',
             'estado' => 'activo'
         ]);
     }

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->text('direccion')->nullable();
             $table->string('imagen')->nullable();
             $table->string('estado')->default('activo');
+            $table->timestamps();
         });
     }
     public function down(): void { Schema::dropIfExists('clientes'); }

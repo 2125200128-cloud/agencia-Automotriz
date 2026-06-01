@@ -2,8 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cliente;
+use App\Models\Color;
+use App\Models\Marca;
+use App\Models\ModeloVehiculo;
+use App\Models\Pedido;
+use App\Models\Producto;
+use App\Models\Proveedor;
+use App\Models\Tipo;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class CatalogListingTest extends TestCase
 {
@@ -14,8 +24,7 @@ class CatalogListingTest extends TestCase
         parent::setUp();
         $this->seed();
     }
-    /** @test */
-    public function it_lists_administradores(): void
+    public function test_it_lists_administradores(): void
     {
         $response = $this->get('/administrador');
         $response->assertStatus(200);
@@ -24,8 +33,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Gómez');
     }
 
-    /** @test */
-    public function it_lists_proveedores(): void
+    public function test_it_lists_proveedores(): void
     {
         $response = $this->get('/proveedor');
         $response->assertStatus(200);
@@ -34,8 +42,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Roberto Silva');
     }
 
-    /** @test */
-    public function it_lists_marcas(): void
+    public function test_it_lists_marcas(): void
     {
         $response = $this->get('/marcas');
         $response->assertStatus(200);
@@ -45,8 +52,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('BMW');
     }
 
-    /** @test */
-    public function it_lists_colores(): void
+    public function test_it_lists_colores(): void
     {
         $response = $this->get('/colores');
         $response->assertStatus(200);
@@ -55,8 +61,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Azul Metálico');
     }
 
-    /** @test */
-    public function it_lists_clientes(): void
+    public function test_it_lists_clientes(): void
     {
         $response = $this->get('/cliente');
         $response->assertStatus(200);
@@ -65,8 +70,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Pérez');
     }
 
-    /** @test */
-    public function it_lists_modelos(): void
+    public function test_it_lists_modelos(): void
     {
         $response = $this->get('/modelos');
         $response->assertStatus(200);
@@ -75,8 +79,7 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Mustang');
     }
 
-    /** @test */
-    public function it_lists_tipos(): void
+    public function test_it_lists_tipos(): void
     {
         $response = $this->get('/tipos');
         $response->assertStatus(200);
@@ -85,13 +88,179 @@ class CatalogListingTest extends TestCase
         $response->assertSee('SUV');
     }
 
-    /** @test */
-    public function it_lists_productos(): void
+    public function test_it_lists_productos(): void
     {
         $response = $this->get('/producto');
         $response->assertStatus(200);
         $response->assertSee('Productos');
+        $response->assertSee('Mercedes-Benz C-Class C200');
+        $response->assertSee('Toyota Corolla SE');
+    }
+
+    public function test_it_lists_empty_pedido_history(): void
+    {
+        $response = $this->get('/pedido');
+        $response->assertStatus(200);
+        $response->assertSee('No hay pedidos registrados.');
+        $response->assertDontSee('#ORD-1024');
+    }
+
+    public function test_it_lists_empty_pago_history(): void
+    {
+        $response = $this->get('/pagos');
+        $response->assertStatus(200);
+        $response->assertSee('No hay pagos registrados.');
+        $response->assertDontSee('PAY-78A3F');
+    }
+
+    public function test_it_lists_empty_productos_pedido(): void
+    {
+        $response = $this->get('/productos-pedido');
+        $response->assertStatus(200);
+        $response->assertSee('Productos de pedidos');
+        $response->assertSee('No hay registros disponibles.');
+    }
+
+    public function test_product_form_loads_related_catalogs(): void
+    {
+        $response = $this->get('/producto/formulario');
+        $response->assertStatus(200);
+        $response->assertSee('BMW');
+        $response->assertSee('Mustang');
+        $response->assertSee('Deportivo');
+        $response->assertSee('Rojo');
+        $response->assertSee('AutoDistribuidora Global');
+    }
+
+    public function test_model_form_loads_marcas(): void
+    {
+        $response = $this->get('/modelos/formulario');
+        $response->assertStatus(200);
+        $response->assertSee('BMW');
+        $response->assertSee('Toyota');
+    }
+
+    public function test_productos_pedido_form_loads_products(): void
+    {
+        $response = $this->get('/productos-pedido/formulario');
+        $response->assertStatus(200);
         $response->assertSee('Ford Mustang GT Fastback');
         $response->assertSee('Toyota Corolla SE');
+    }
+
+    public function test_home_loads_real_products_and_catalogs(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Mercedes-Benz C-Class C200');
+        $response->assertSee('Toyota');
+        $response->assertSee('Deportivo');
+        $response->assertDontSee('Audi RS 7 Sportback');
+    }
+
+    public function test_forms_register_catalog_records(): void
+    {
+        $this->post('/marcas', ['nombre' => 'Honda'])
+            ->assertRedirect('/marcas');
+        $this->post('/colores', ['nombre' => 'Verde'])
+            ->assertRedirect('/colores');
+        $this->post('/tipos', ['nombre' => 'Convertible'])
+            ->assertRedirect('/tipos');
+        $this->post('/modelos', [
+            'marca_id' => Marca::where('nombre', 'Honda')->value('id'),
+            'nombre' => 'Civic',
+        ])->assertRedirect('/modelos');
+
+        $this->assertDatabaseHas('marcas', ['nombre' => 'Honda']);
+        $this->assertDatabaseHas('colores', ['nombre' => 'Verde']);
+        $this->assertDatabaseHas('tipos', ['nombre' => 'Convertible']);
+        $this->assertDatabaseHas('modelos_vehiculos', ['nombre' => 'Civic']);
+    }
+
+    public function test_forms_store_uploaded_images(): void
+    {
+        Storage::fake('public');
+
+        $this->post('/marcas', [
+            'nombre' => 'Honda',
+            'imagen' => UploadedFile::fake()->createWithContent(
+                'honda.png',
+                base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+            ),
+        ])->assertRedirect('/marcas');
+
+        $imagen = Marca::where('nombre', 'Honda')->value('imagen');
+
+        $this->assertNotNull($imagen);
+        Storage::disk('public')->assertExists($imagen);
+    }
+
+    public function test_forms_register_people_and_provider(): void
+    {
+        $this->post('/administrador', [
+            'nombres' => 'Elena',
+            'apellidos' => 'Ramos',
+            'correo' => 'elena@example.com',
+            'usuario' => 'elena.ramos',
+            'contrasena' => 'secreto1',
+            'rol' => 'capturista',
+            'estado' => 'activo',
+        ])->assertRedirect('/administrador');
+
+        $this->post('/cliente', [
+            'nombre' => 'Pedro Gomez',
+            'email' => 'pedro@example.com',
+            'telefono' => '555-0000',
+            'password' => 'secreto1',
+        ])->assertRedirect('/cliente');
+
+        $this->post('/proveedor', [
+            'nombre_empresa' => 'Autos Centro',
+            'telefono' => '555-1111',
+            'email' => 'ventas@autoscentro.com',
+            'nombre_representante' => 'Laura Perez',
+        ])->assertRedirect('/proveedor');
+
+        $this->assertDatabaseHas('administradores', ['correo' => 'elena@example.com']);
+        $this->assertDatabaseHas('clientes', ['correo' => 'pedro@example.com']);
+        $this->assertDatabaseHas('proveedores', ['nombre' => 'Autos Centro']);
+    }
+
+    public function test_forms_register_product_and_order_detail(): void
+    {
+        $this->post('/producto', [
+            'nombre' => 'Vehiculo de prueba',
+            'precio' => 250000,
+            'marca_id' => Marca::first()->id,
+            'modelo_id' => ModeloVehiculo::first()->id,
+            'tipo_id' => Tipo::first()->id,
+            'color_id' => Color::first()->id,
+            'proveedor_id' => Proveedor::first()->id,
+            'existencia' => 1,
+            'estado' => 'activo',
+        ])->assertRedirect('/producto');
+
+        $pedido = Pedido::create([
+            'cliente_id' => Cliente::first()->id,
+            'fecha' => now()->toDateString(),
+            'total' => 250000,
+            'estado' => 'pendiente',
+        ]);
+
+        $producto = Producto::where('nombre', 'Vehiculo de prueba')->first();
+
+        $this->post('/productos-pedido', [
+            'pedido_id' => $pedido->id,
+            'producto_id' => $producto->id,
+            'cantidad' => 1,
+            'precio' => 250000,
+            'descuento' => 0,
+        ])->assertRedirect('/productos-pedido');
+
+        $this->assertDatabaseHas('productos', ['nombre' => 'Vehiculo de prueba']);
+        $this->assertDatabaseHas('pedido_producto', [
+            'pedido_id' => $pedido->id,
+            'producto_id' => $producto->id,
+        ]);
     }
 }

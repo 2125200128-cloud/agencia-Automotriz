@@ -2,7 +2,6 @@
 
 @section('dinamico')
 <section class="min-h-screen bg-black px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden flex items-center justify-center">
-    <!-- Efecto visual de fondo (Glassmorphism / Glow) -->
     <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -14,7 +13,6 @@
 
         <div class="grid gap-8 lg:grid-cols-2 lg:gap-16 items-start">
             
-            <!-- Iniciar Sesión -->
             <div class="rounded-3xl border border-white/10 bg-zinc-950/80 p-8 shadow-[0_0_45px_rgba(0,0,0,0.5)] backdrop-blur-sm">
                 <h2 class="text-2xl font-bold text-white mb-6">Ya tengo una cuenta</h2>
                 
@@ -41,16 +39,14 @@
                 </form>
             </div>
 
-            <!-- Crear Cuenta -->
             <div class="rounded-3xl border border-white/10 bg-zinc-950/80 p-8 shadow-[0_0_45px_rgba(0,0,0,0.5)] backdrop-blur-sm relative">
-                <!-- Highlight Badge -->
                 <div class="absolute -top-4 right-8 bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs font-black uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg">
                     Requerido para comprar
                 </div>
 
                 <h2 class="text-2xl font-bold text-white mb-6">Crear cuenta nueva</h2>
                 
-                <form action="#" method="POST" enctype="multipart/form-data" class="space-y-5">
+                <form action="/cliente" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     <div class="grid gap-5 md:grid-cols-2">
                         <div class="md:col-span-2">

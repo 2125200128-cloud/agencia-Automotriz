@@ -4,13 +4,13 @@
 <section class="min-h-screen bg-black px-4 py-10 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-5xl">
         <div class="mb-8 border-l-4 border-white/30 pl-5">
-            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-zinc-300">Tabla productos_pedido</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-zinc-300">Tabla pedido_producto</p>
             <h1 class="mt-3 text-3xl font-black text-white sm:text-4xl">Formulario de Productos Pedido</h1>
             <p class="mt-2 text-gray-400"></p>
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_45px_rgba(255,255,255,0.10)] sm:p-8">
-            <form action="#" method="POST" class="space-y-6">
+            <form action="/productos-pedido" method="POST" class="space-y-6">
                 @csrf
 
                 @if(isset($pedido_id))

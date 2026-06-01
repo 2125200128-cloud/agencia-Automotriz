@@ -2,49 +2,18 @@
 
 @section('dinamico')
 @php
-    $categorias = [
-        ['nombre' => 'Cabrio', 'imagen' => 'imagenes/categoriaCanbri.jpg', 'cantidad' => '18 modelos'],
-        ['nombre' => 'Coupé', 'imagen' => 'imagenes/categoriaCoupe.jpg', 'cantidad' => '24 modelos'],
-        ['nombre' => 'Hatchback', 'imagen' => 'imagenes/categoriaHatchback.jpg', 'cantidad' => '31 modelos'],
-        ['nombre' => 'Pick Up', 'imagen' => 'imagenes/categoriaPickUp.jpg', 'cantidad' => '16 modelos'],
-        ['nombre' => 'Sedán', 'imagen' => 'imagenes/categoriaSedan.jpg', 'cantidad' => '42 modelos'],
-        ['nombre' => 'SUV', 'imagen' => 'imagenes/categoriaSuv.jpg', 'cantidad' => '37 modelos'],
-    ];
-
     $imagenesCarruselInicio = [
         'imagenes/imagenInicioCarrucel1.jpg',
         'imagenes/imagenInicoCarrucel2.jpg',
         'imagenes/imagenInicioCarrucel3.jpg',
     ];
 
-    $vehiculos = [
-        [
-            'nombre' => 'Audi RS 7 Sportback',
-            'tipo' => 'Sedán deportivo',
-            'precio' => '$1,890,000 MXN',
-            'marca' => 'Audi',
-            'combustible' => 'Gasolina',
-            'transmision' => 'Automatica',
-            'imagen' => 'imagenes/audi-rs7.jpg',
-        ],
-        [
-            'nombre' => 'BMW M4 Competition',
-            'tipo' => 'Coupé',
-            'precio' => '$1,740,000 MXN',
-            'marca' => 'BMW',
-            'combustible' => 'Gasolina',
-            'transmision' => 'Automatica',
-            'imagen' => 'imagenes/bmw-m4.jpg',
-        ],
-        [
-            'nombre' => 'Mercedes-Benz GLE',
-            'tipo' => 'SUV',
-            'precio' => '$1,520,000 MXN',
-            'marca' => 'Mercedes-Benz',
-            'combustible' => 'Híbrido',
-            'transmision' => 'Automatica',
-            'imagen' => 'imagenes/mercedes-gle.jpg',
-        ],
+    $imagenesCategorias = [
+        'imagenes/categoriaSedan.jpg',
+        'imagenes/categoriaSuv.jpg',
+        'imagenes/categoriaCoupe.jpg',
+        'imagenes/categoriaPickUp.jpg',
+        'imagenes/categoriaHatchback.jpg',
     ];
 @endphp
 
@@ -84,7 +53,7 @@
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="/productoauto" class="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-sm font-black uppercase tracking-wide text-black shadow-[0_0_28px_rgba(255,255,255,0.18)] transition hover:bg-zinc-200 focus:outline-none focus:ring-4 focus:ring-white/30">
+                <a href="/producto" class="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-sm font-black uppercase tracking-wide text-black shadow-[0_0_28px_rgba(255,255,255,0.18)] transition hover:bg-zinc-200 focus:outline-none focus:ring-4 focus:ring-white/30">
                     Ver vehículos
                     <svg class="ms-2 h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -106,7 +75,7 @@
             </div>
             <div class="relative z-20 mx-auto -mt-6 grid max-w-2xl grid-cols-3 gap-3 rounded-2xl border border-white/15 bg-zinc-950/85 p-3 shadow-[0_0_34px_rgba(255,255,255,0.12)] backdrop-blur">
                 <div class="rounded-xl bg-black/80 p-3 text-center">
-                    <p class="text-lg font-black text-white">120+</p>
+                    <p class="text-lg font-black text-white">{{ $totalVehiculos }}</p>
                     <p class="text-xs text-gray-400">Vehículos</p>
                 </div>
                 <div class="rounded-xl bg-black/80 p-3 text-center">
@@ -187,12 +156,9 @@
                 <label for="categoria" class="mb-2 block text-sm font-bold text-gray-200">Categoria</label>
                 <select id="categoria" name="categoria" class="block w-full rounded-lg border border-white/10 bg-black p-3 text-sm text-white focus:border-white/30 focus:ring-white/30">
                     <option selected>Cualquiera</option>
-                    <option>Cabrio</option>
-                    <option>Coupé</option>
-                    <option>Hatchback</option>
-                    <option>Pick Up</option>
-                    <option>Sedán</option>
-                    <option>SUV</option>
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -200,11 +166,9 @@
                 <label for="marca" class="mb-2 block text-sm font-bold text-gray-200">Marca</label>
                 <select id="marca" name="marca" class="block w-full rounded-lg border border-white/10 bg-black p-3 text-sm text-white focus:border-white/30 focus:ring-white/30">
                     <option selected>Todas</option>
-                    <option>Audi</option>
-                    <option>BMW</option>
-                    <option>Mercedes-Benz</option>
-                    <option>Nissan</option>
-                    <option>Toyota</option>
+                    @foreach ($marcas as $marca)
+                        <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -260,12 +224,12 @@
             @foreach ($categorias as $categoria)
                 <article class="group overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-[0_0_24px_rgba(255,255,255,0.08)] transition hover:-translate-y-1 hover:border-white/30 hover:shadow-[0_0_34px_rgba(255,255,255,0.12)]">
                     <div class="relative aspect-[4/3] overflow-hidden bg-zinc-900">
-                        <img src="{{ asset($categoria['imagen']) }}" alt="{{ $categoria['nombre'] }}" class="h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-110 group-hover:opacity-100">
+                        <img src="{{ asset($imagenesCategorias[$loop->index % count($imagenesCategorias)]) }}" alt="{{ $categoria->nombre }}" class="h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-110 group-hover:opacity-100">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent"></div>
                     </div>
                     <div class="p-4">
-                        <h3 class="text-lg font-black text-white">{{ $categoria['nombre'] }}</h3>
-                        <p class="mt-1 text-sm text-zinc-200">{{ $categoria['cantidad'] }}</p>
+                        <h3 class="text-lg font-black text-white">{{ $categoria->nombre }}</h3>
+                        <p class="mt-1 text-sm text-zinc-200">{{ $categoria->productos_count }} vehiculos</p>
                     </div>
                 </article>
             @endforeach
@@ -284,9 +248,14 @@
 
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             @foreach ($vehiculos as $vehiculo)
+                @php
+                    $imagenVehiculo = $vehiculo->imagen_principal && Illuminate\Support\Facades\Storage::disk('public')->exists($vehiculo->imagen_principal)
+                        ? asset('storage/'.$vehiculo->imagen_principal)
+                        : asset($imagenesCarruselInicio[$loop->index % count($imagenesCarruselInicio)]);
+                @endphp
                 <article class="overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_0_30px_rgba(255,255,255,0.08)] transition hover:border-white/30 hover:shadow-[0_0_40px_rgba(255,255,255,0.12)]">
                     <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
-                        <img src="{{ asset($vehiculo['imagen']) }}" alt="{{ $vehiculo['nombre'] }}" class="h-full w-full object-cover">
+                        <img src="{{ $imagenVehiculo }}" alt="{{ $vehiculo->nombre }}" class="h-full w-full object-cover">
                         <button type="button" class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/80 text-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.12)] transition hover:bg-white hover:text-black" aria-label="Agregar a favoritos">
                             <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 19">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17.5s-8.5-4.8-8.5-11A4.7 4.7 0 0 1 11 3a4.7 4.7 0 0 1 8.5 3.5c0 6.2-8.5 11-8.5 11Z"/>
@@ -297,31 +266,30 @@
                     <div class="p-5">
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <h3 class="text-xl font-black text-white">{{ $vehiculo['nombre'] }}</h3>
-                                <p class="mt-1 text-sm text-gray-400">{{ $vehiculo['tipo'] }}</p>
+                                <h3 class="text-xl font-black text-white">{{ $vehiculo->nombre }}</h3>
+                                <p class="mt-1 text-sm text-gray-400">{{ $vehiculo->tipo?->nombre ?? 'Sin tipo' }}</p>
                             </div>
-                            <span class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white">{{ $vehiculo['transmision'] }}</span>
+                            <span class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white">{{ ucfirst($vehiculo->estado) }}</span>
                         </div>
 
-                        <p class="mt-5 text-2xl font-black text-white">{{ $vehiculo['precio'] }}</p>
+                        <p class="mt-5 text-2xl font-black text-white">${{ number_format($vehiculo->precio, 2) }} MXN</p>
 
                         <div class="mt-5 grid grid-cols-2 gap-3 text-sm">
                             <div class="rounded-lg border border-white/10 bg-zinc-950 p-3">
                                 <p class="text-gray-500">Marca</p>
-                                <p class="font-bold text-white">{{ $vehiculo['marca'] }}</p>
+                                <p class="font-bold text-white">{{ $vehiculo->marca?->nombre ?? 'Sin marca' }}</p>
                             </div>
                             <div class="rounded-lg border border-white/10 bg-zinc-950 p-3">
-                                <p class="text-gray-500">Combustible</p>
-                                <p class="font-bold text-white">{{ $vehiculo['combustible'] }}</p>
+                                <p class="text-gray-500">Existencia</p>
+                                <p class="font-bold text-white">{{ $vehiculo->existencia }}</p>
                             </div>
                         </div>
 
-                        <!-- Acciones de Compra y Prueba de Manejo -->
                         <div class="mt-6 grid grid-cols-2 gap-3">
-                            <a href="/cliente/cita?auto={{ urlencode($vehiculo['nombre']) }}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-zinc-900/60 py-3 text-center text-xs font-bold text-zinc-300 transition hover:bg-zinc-800 hover:text-white">
+                            <a href="{{ url('/cliente/cita') . '?' . http_build_query(['auto' => $vehiculo->nombre]) }}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-zinc-900/60 py-3 text-center text-xs font-bold text-zinc-300 transition hover:bg-zinc-800 hover:text-white">
                                 Prueba de manejo
                             </a>
-                            <a href="/cliente/compra?auto={{ urlencode($vehiculo['nombre']) }}&precio={{ urlencode($vehiculo['precio']) }}&tipo={{ urlencode($vehiculo['tipo']) }}" class="neon-red inline-flex items-center justify-center rounded-xl bg-red-600 py-3 text-center text-xs font-black uppercase text-white transition hover:bg-red-500">
+                            <a href="{{ url('/cliente/compra') . '?' . http_build_query(['auto' => $vehiculo->nombre, 'precio' => '$' . number_format($vehiculo->precio, 2) . ' MXN', 'tipo' => $vehiculo->tipo?->nombre ?? 'Sin tipo']) }}" class="neon-red inline-flex items-center justify-center rounded-xl bg-red-600 py-3 text-center text-xs font-black uppercase text-white transition hover:bg-red-500">
                                 Comprar
                             </a>
                         </div>
@@ -331,7 +299,7 @@
         </div>
 
         <div class="mt-10 text-center">
-            <a href="/productoauto" class="inline-flex items-center justify-center rounded-lg border border-white/25 px-7 py-3 text-sm font-black uppercase tracking-wide text-white shadow-[0_0_22px_rgba(255,255,255,0.08)] transition hover:bg-white hover:text-black hover:shadow-[0_0_34px_rgba(255,255,255,0.18)] focus:outline-none focus:ring-4 focus:ring-white/30">
+            <a href="/producto" class="inline-flex items-center justify-center rounded-lg border border-white/25 px-7 py-3 text-sm font-black uppercase tracking-wide text-white shadow-[0_0_22px_rgba(255,255,255,0.08)] transition hover:bg-white hover:text-black hover:shadow-[0_0_34px_rgba(255,255,255,0.18)] focus:outline-none focus:ring-4 focus:ring-white/30">
                 Ver todos los vehículos
             </a>
         </div>
@@ -396,8 +364,3 @@
     </div>
 </section>
 @endsection
-
-
-
-
-

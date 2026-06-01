@@ -13,11 +13,10 @@
         </div>
 
         <div class="rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-[0_0_45px_rgba(255,255,255,0.10)] sm:p-8">
-            <form action="#" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form action="/producto" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 
                 <div class="space-y-8">
-                    <!-- Información Principal -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Información Principal</h3>
                         <div class="grid gap-6 md:grid-cols-2">
@@ -48,7 +47,6 @@
                         </div>
                     </div>
 
-                    <!-- Clasificación y Relaciones -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Clasificación y Proveedor</h3>
                         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -56,36 +54,50 @@
                                 <label for="marca_id" class="mb-2 block text-sm font-bold text-zinc-300">Marca</label>
                                 <select id="marca_id" name="marca_id" class="block w-full rounded-xl border border-white/10 bg-black/85 p-3 text-white focus:border-white/30 focus:ring-white/30 transition">
                                     <option value="">Selecciona marca</option>
+                                    @foreach ($marcas as $marca)
+                                        <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div>
                                 <label for="modelo_id" class="mb-2 block text-sm font-bold text-zinc-300">Modelo</label>
                                 <select id="modelo_id" name="modelo_id" class="block w-full rounded-xl border border-white/10 bg-black/85 p-3 text-white focus:border-white/30 focus:ring-white/30 transition">
                                     <option value="">Selecciona modelo</option>
+                                    @foreach ($modelos as $modelo)
+                                        <option value="{{ $modelo->id }}">{{ $modelo->nombre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div>
                                 <label for="tipo_id" class="mb-2 block text-sm font-bold text-zinc-300">Tipo de Vehículo</label>
                                 <select id="tipo_id" name="tipo_id" class="block w-full rounded-xl border border-white/10 bg-black/85 p-3 text-white focus:border-white/30 focus:ring-white/30 transition">
                                     <option value="">Selecciona tipo</option>
+                                    @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo->id }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div>
                                 <label for="color_id" class="mb-2 block text-sm font-bold text-zinc-300">Color Exterior</label>
                                 <select id="color_id" name="color_id" class="block w-full rounded-xl border border-white/10 bg-black/85 p-3 text-white focus:border-white/30 focus:ring-white/30 transition">
                                     <option value="">Selecciona color</option>
+                                    @foreach ($colores as $color)
+                                        <option value="{{ $color->id }}">{{ $color->nombre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="lg:col-span-2">
                                 <label for="proveedor_id" class="mb-2 block text-sm font-bold text-zinc-300">Proveedor</label>
                                 <select id="proveedor_id" name="proveedor_id" class="block w-full rounded-xl border border-white/10 bg-black/85 p-3 text-white focus:border-white/30 focus:ring-white/30 transition">
                                     <option value="">Selecciona proveedor</option>
+                                    @foreach ($proveedores as $proveedor)
+                                        <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Precios y Estado -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Comercial</h3>
                         <div class="grid gap-6 md:grid-cols-3">
@@ -110,41 +122,40 @@
                         </div>
                     </div>
 
-                    <!-- Galería de Imágenes -->
                     <div>
                         <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Galería de Imágenes</h3>
                         <div class="grid gap-6 md:grid-cols-3">
                             <div>
                                 <label class="mb-2 block text-sm font-bold text-zinc-300">Imagen Principal</label>
                                 <div class="flex items-center justify-center w-full">
-                                    <label for="imagen_uno" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
+                                    <label for="imagen_principal" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                                             <p class="text-xs text-zinc-400">Subir foto (.jpg, .png)</p>
                                         </div>
-                                        <input id="imagen_uno" name="imagen_uno" type="file" class="hidden" accept="image/*" />
+                                        <input id="imagen_principal" name="imagen_principal" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
                             </div>
                             <div>
                                 <label class="mb-2 block text-sm font-bold text-zinc-300">Imagen 2</label>
                                 <div class="flex items-center justify-center w-full">
-                                    <label for="imagen_dos" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
+                                    <label for="imagen_secundaria" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                                         </div>
-                                        <input id="imagen_dos" name="imagen_dos" type="file" class="hidden" accept="image/*" />
+                                        <input id="imagen_secundaria" name="imagen_secundaria" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
                             </div>
                             <div>
                                 <label class="mb-2 block text-sm font-bold text-zinc-300">Imagen 3</label>
                                 <div class="flex items-center justify-center w-full">
-                                    <label for="imagen_tres" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
+                                    <label for="imagen_adicional" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                                         </div>
-                                        <input id="imagen_tres" name="imagen_tres" type="file" class="hidden" accept="image/*" />
+                                        <input id="imagen_adicional" name="imagen_adicional" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
                             </div>

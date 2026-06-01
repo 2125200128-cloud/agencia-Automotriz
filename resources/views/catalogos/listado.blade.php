@@ -30,7 +30,17 @@
                             <tr class="transition hover:bg-white/5">
                                 @foreach ($columnas as $atributo => $encabezado)
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ data_get($registro, $atributo) ?? 'Sin registro' }}
+                                        @php
+                                            $valor = data_get($registro, $atributo);
+                                            $esImagen = str_contains($atributo, 'imagen');
+                                            $imagenPublica = $valor && file_exists(public_path($valor));
+                                            $imagenStorage = $valor && Illuminate\Support\Facades\Storage::disk('public')->exists($valor);
+                                        @endphp
+                                        @if ($esImagen && ($imagenPublica || $imagenStorage))
+                                            <img src="{{ $imagenPublica ? asset($valor) : asset('storage/'.$valor) }}" alt="{{ $encabezado }}" class="h-12 w-20 rounded object-cover">
+                                        @else
+                                            {{ $valor ?? 'Sin registro' }}
+                                        @endif
                                     </td>
                                 @endforeach
                             </tr>

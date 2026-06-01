@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('imagen')->nullable();
             $table->string('rol');
             $table->string('estado')->default('activo');
+            $table->timestamps();
         });
     }
     public function down(): void { Schema::dropIfExists('administradores'); }

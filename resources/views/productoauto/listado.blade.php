@@ -34,7 +34,6 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     <div class="h-10 w-16 rounded overflow-hidden bg-zinc-800 flex-shrink-0">
-                                        <!-- Imagen placeholder -->
                                     </div>
                                     <div>
                                         <p class="font-bold text-white">Nissan Skyline GT-R R34</p>

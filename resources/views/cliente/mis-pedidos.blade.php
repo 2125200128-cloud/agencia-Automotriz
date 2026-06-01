@@ -11,7 +11,6 @@
             <p class="mt-2 text-gray-400">Consulta el estado de tus compras y sigue el proceso de entrega.</p>
         </div>
 
-        {{-- Buscador de Pedido --}}
         <div class="rounded-2xl border border-white/10 bg-zinc-950 p-6 sm:p-8">
             <h3 class="text-lg font-bold text-white mb-4">Buscar mi pedido</h3>
             <div class="flex gap-3">
@@ -20,10 +19,8 @@
             </div>
         </div>
 
-        {{-- Resultado del pedido --}}
         <div id="resultado-pedido" class="mt-8 space-y-6">
 
-            {{-- Tarjeta de ejemplo --}}
             <div class="rounded-2xl border border-white/10 bg-zinc-950 p-6 sm:p-8">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
@@ -34,7 +31,6 @@
                     <span class="self-start rounded-full bg-green-500/15 px-4 py-1.5 text-sm font-bold text-green-300">Pagado</span>
                 </div>
 
-                {{-- Detalle del vehículo --}}
                 <div class="mt-6 rounded-xl border border-white/10 bg-black/50 p-5">
                     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
@@ -45,16 +41,13 @@
                     </div>
                 </div>
 
-                {{-- Tracker visual de estado --}}
                 <div class="mt-8">
                     <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-6">Seguimiento del pedido</h3>
                     <div class="relative">
-                        {{-- Línea de progreso --}}
                         <div class="absolute top-5 left-5 right-5 h-0.5 bg-white/10"></div>
                         <div class="absolute top-5 left-5 h-0.5 bg-red-500 transition-all duration-500" style="width: 33%;"></div>
 
                         <div class="relative flex justify-between">
-                            {{-- Paso 1: Confirmado --}}
                             <div class="flex flex-col items-center text-center w-1/4">
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white font-bold text-sm ring-4 ring-red-600/20">
                                     ✓
@@ -62,7 +55,6 @@
                                 <p class="mt-3 text-xs font-bold text-white">Confirmado</p>
                                 <p class="text-[10px] text-gray-500 mt-0.5">27/05/2026</p>
                             </div>
-                            {{-- Paso 2: En proceso --}}
                             <div class="flex flex-col items-center text-center w-1/4">
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white font-bold text-sm ring-4 ring-red-600/20">
                                     ✓
@@ -70,7 +62,6 @@
                                 <p class="mt-3 text-xs font-bold text-white">En proceso</p>
                                 <p class="text-[10px] text-gray-500 mt-0.5">28/05/2026</p>
                             </div>
-                            {{-- Paso 3: Enviado --}}
                             <div class="flex flex-col items-center text-center w-1/4">
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-zinc-900 text-gray-500 font-bold text-sm">
                                     3
@@ -78,7 +69,6 @@
                                 <p class="mt-3 text-xs font-bold text-gray-500">Enviado</p>
                                 <p class="text-[10px] text-gray-600 mt-0.5">—</p>
                             </div>
-                            {{-- Paso 4: Entregado --}}
                             <div class="flex flex-col items-center text-center w-1/4">
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-zinc-900 text-gray-500 font-bold text-sm">
                                     4
@@ -90,7 +80,6 @@
                     </div>
                 </div>
 
-                {{-- Info de pago --}}
                 <div class="mt-8 grid gap-4 sm:grid-cols-3 border-t border-white/10 pt-6">
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-wider">Método de pago</p>
@@ -107,7 +96,6 @@
                 </div>
             </div>
 
-            {{-- Nota de soporte --}}
             <div class="rounded-xl border border-white/10 bg-zinc-950 p-5 flex items-start gap-4">
                 <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600/15 text-red-400 text-lg">?</div>
                 <div>
@@ -126,8 +114,6 @@
             alert('Por favor ingresa un número de folio.');
             return;
         }
-        // Aquí irá la lógica para buscar el pedido en la base de datos
-        // Por ahora muestra el ejemplo estático
         document.getElementById('resultado-pedido').scrollIntoView({ behavior: 'smooth' });
     }
 </script>

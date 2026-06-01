@@ -30,4 +30,24 @@ class ProveedorController extends Controller
     {
         return view('proveedor.formulario');
     }
+
+    public function store(Request $request)
+    {
+        $datos = $request->validate([
+            'nombre_empresa' => ['required', 'string', 'max:255'],
+            'telefono' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'nombre_representante' => ['required', 'string', 'max:255'],
+        ]);
+
+        Proveedor::create([
+            'nombre' => $datos['nombre_empresa'],
+            'contacto' => $datos['nombre_representante'],
+            'telefono' => $datos['telefono'],
+            'correo' => $datos['email'],
+            'estado' => 'activo',
+        ]);
+
+        return redirect('/proveedor');
+    }
 }

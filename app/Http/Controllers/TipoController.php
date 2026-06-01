@@ -26,4 +26,20 @@ class TipoController extends Controller
     {
         return view('tipos.formulario');
     }
+
+    public function store(Request $request)
+    {
+        $datos = $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
+        ]);
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('tipos', 'public');
+        }
+
+        Tipo::create($datos);
+
+        return redirect('/tipos');
+    }
 }

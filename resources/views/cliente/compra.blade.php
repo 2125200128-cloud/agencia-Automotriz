@@ -57,7 +57,6 @@
                 </form>
             </div>
 
-            <!-- Resumen del Vehículo -->
             <div>
                 <div class="sticky top-28 rounded-2xl border border-white/10 bg-zinc-950 p-6 shadow-sm">
                     <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">Resumen</h3>

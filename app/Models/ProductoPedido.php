@@ -10,7 +10,7 @@ class ProductoPedido extends Pivot
 {
     use HasFactory;
 
-    protected $table = 'productos_pedido';
+    protected $table = 'pedido_producto';
 
     public $timestamps = false;
 

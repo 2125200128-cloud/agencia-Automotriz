@@ -13,12 +13,10 @@ class Producto extends Model
 
     protected $table = 'productos';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'nombre', 'descripcion', 'numero_serie', 'anio', 'detalles', 'precio',
         'marca_id', 'modelo_id', 'tipo_id', 'color_id', 'proveedor_id',
-        'existencia', 'descuento', 'imagen_uno', 'imagen_dos', 'imagen_tres', 'estado',
+        'existencia', 'descuento', 'imagen_principal', 'imagen_secundaria', 'imagen_adicional', 'estado',
     ];
 
     protected function casts(): array
@@ -56,7 +54,7 @@ class Producto extends Model
 
     public function pedidos(): BelongsToMany
     {
-        return $this->belongsToMany(Pedido::class, 'productos_pedido', 'producto_id', 'pedido_id')
+        return $this->belongsToMany(Pedido::class, 'pedido_producto', 'producto_id', 'pedido_id')
             ->using(ProductoPedido::class)
             ->withPivot(['cantidad', 'precio', 'descuento']);
     }

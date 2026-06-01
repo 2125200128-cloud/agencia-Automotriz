@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
-        Schema::create('productos_pedido', function (Blueprint $table) {
+        Schema::create('pedido_producto', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pedido_id')->constrained('pedidos')->cascadeOnDelete();
             $table->foreignId('producto_id')->constrained('productos')->cascadeOnDelete();
@@ -13,5 +13,5 @@ return new class extends Migration {
             $table->decimal('descuento', 10, 2)->default(0);
         });
     }
-    public function down(): void { Schema::dropIfExists('productos_pedido'); }
+    public function down(): void { Schema::dropIfExists('pedido_producto'); }
 };
