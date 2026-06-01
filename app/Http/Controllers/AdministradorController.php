@@ -14,14 +14,14 @@ class AdministradorController extends Controller
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('administrador.formulario');
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        $datos = $request->validate([
+        $request->validate([
             'nombres' => ['required', 'string', 'max:255'],
             'apellidos' => ['required', 'string', 'max:255'],
             'correo' => ['required', 'email', 'max:255', 'unique:administradores,correo'],
@@ -32,11 +32,20 @@ class AdministradorController extends Controller
             'estado' => ['required', 'in:activo,inactivo'],
         ]);
 
+        $administrador = new Administrador();
+        $administrador->nombres = $request->input('nombres');
+        $administrador->apellidos = $request->input('apellidos');
+        $administrador->correo = $request->input('correo');
+        $administrador->usuario = $request->input('usuario');
+        $administrador->contrasena = $request->input('contrasena');
+        $administrador->rol = $request->input('rol');
+        $administrador->estado = $request->input('estado');
+
         if ($request->hasFile('imagen')) {
-            $datos['imagen'] = $request->file('imagen')->store('administradores', 'public');
+            $administrador->imagen = $request->file('imagen')->store('administradores', 'public');
         }
 
-        Administrador::create($datos);
+        $administrador->save();
 
         return redirect('/administrador');
     }

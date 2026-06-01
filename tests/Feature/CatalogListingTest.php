@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Color;
 use App\Models\Marca;
 use App\Models\ModeloVehiculo;
+use App\Models\Pago;
 use App\Models\Pedido;
 use App\Models\Producto;
 use App\Models\Proveedor;
@@ -148,6 +149,25 @@ class CatalogListingTest extends TestCase
         $response->assertSee('Toyota Corolla SE');
     }
 
+    public function test_order_and_payment_forms_load_related_records(): void
+    {
+        $cliente = Cliente::first();
+        $pedido = Pedido::create([
+            'cliente_id' => $cliente->id,
+            'fecha' => now()->toDateString(),
+            'total' => 1000,
+            'estado' => 'pendiente',
+        ]);
+
+        $this->get('/pedido/formulario')
+            ->assertStatus(200)
+            ->assertSee($cliente->nombres);
+
+        $this->get('/pagos/formulario')
+            ->assertStatus(200)
+            ->assertSee('Pedido #'.$pedido->id);
+    }
+
     public function test_home_loads_real_products_and_catalogs(): void
     {
         $response = $this->get('/');
@@ -193,6 +213,53 @@ class CatalogListingTest extends TestCase
 
         $this->assertNotNull($imagen);
         Storage::disk('public')->assertExists($imagen);
+    }
+
+    public function test_product_form_stores_three_uploaded_images(): void
+    {
+        Storage::fake('public');
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+
+        $this->post('/producto', [
+            'nombre' => 'Auto con galeria',
+            'numero_serie' => 'GALERIA-001',
+            'precio' => 250000,
+            'marca_id' => Marca::first()->id,
+            'modelo_id' => ModeloVehiculo::first()->id,
+            'tipo_id' => Tipo::first()->id,
+            'color_id' => Color::first()->id,
+            'proveedor_id' => Proveedor::first()->id,
+            'existencia' => 1,
+            'estado' => 'activo',
+            'imagen_principal' => UploadedFile::fake()->createWithContent('principal.png', $png),
+            'imagen_secundaria' => UploadedFile::fake()->createWithContent('secundaria.png', $png),
+            'imagen_adicional' => UploadedFile::fake()->createWithContent('adicional.png', $png),
+        ])->assertRedirect('/producto');
+
+        $producto = Producto::where('numero_serie', 'GALERIA-001')->first();
+
+        Storage::disk('public')->assertExists($producto->imagen_principal);
+        Storage::disk('public')->assertExists($producto->imagen_secundaria);
+        Storage::disk('public')->assertExists($producto->imagen_adicional);
+    }
+
+    public function test_home_only_shows_one_card_for_a_repeated_serial_number(): void
+    {
+        $datos = [
+            'nombre' => 'Auto duplicado',
+            'numero_serie' => 'SERIE-REPETIDA',
+            'precio' => 250000,
+            'existencia' => 1,
+            'estado' => 'activo',
+        ];
+
+        Producto::create($datos);
+        Producto::create($datos);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $this->assertSame(1, substr_count($response->getContent(), '<h3 class="text-xl font-black text-white">Auto duplicado</h3>'));
     }
 
     public function test_forms_register_people_and_provider(): void
@@ -262,5 +329,37 @@ class CatalogListingTest extends TestCase
             'pedido_id' => $pedido->id,
             'producto_id' => $producto->id,
         ]);
+    }
+
+    public function test_forms_register_order_and_payment(): void
+    {
+        $this->post('/pedido', [
+            'cliente_id' => Cliente::first()->id,
+            'fecha' => now()->toDateString(),
+            'descuento' => 0,
+            'iva' => 160,
+            'total' => 1160,
+            'estado' => 'pendiente',
+        ])->assertRedirect('/pedido');
+
+        $pedido = Pedido::latest('id')->first();
+
+        $this->post('/pagos', [
+            'pedido_id' => $pedido->id,
+            'metodo_pago' => 'efectivo',
+            'monto' => 1160,
+            'fecha_pago' => now()->toDateString(),
+            'estado' => 'completado',
+        ])->assertRedirect('/pagos');
+
+        $this->assertDatabaseHas('pedidos', [
+            'id' => $pedido->id,
+            'estado' => 'pendiente',
+        ]);
+        $this->assertDatabaseHas('pagos', [
+            'pedido_id' => $pedido->id,
+            'metodo_pago' => 'efectivo',
+        ]);
+        $this->assertSame(1, Pago::where('pedido_id', $pedido->id)->count());
     }
 }

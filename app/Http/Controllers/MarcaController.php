@@ -22,23 +22,26 @@ class MarcaController extends Controller
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('marcas.formulario');
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        $datos = $request->validate([
+        $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
             'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
         ]);
 
+        $marca = new Marca();
+        $marca->nombre = $request->input('nombre');
+
         if ($request->hasFile('imagen')) {
-            $datos['imagen'] = $request->file('imagen')->store('marcas', 'public');
+            $marca->imagen = $request->file('imagen')->store('marcas', 'public');
         }
 
-        Marca::create($datos);
+        $marca->save();
 
         return redirect('/marcas');
     }

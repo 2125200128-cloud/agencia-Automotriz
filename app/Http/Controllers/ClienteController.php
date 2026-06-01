@@ -26,12 +26,12 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('cliente.formulario');
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
         $datos = $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
@@ -43,15 +43,19 @@ class ClienteController extends Controller
 
         $partesNombre = preg_split('/\s+/', trim($datos['nombre']), 2);
 
-        Cliente::create([
-            'nombres' => $partesNombre[0],
-            'apellidos' => $partesNombre[1] ?? '',
-            'correo' => $datos['email'],
-            'telefono' => $datos['telefono'],
-            'contrasena' => $datos['password'],
-            'imagen' => $request->file('foto')?->store('clientes', 'public'),
-            'estado' => 'activo',
-        ]);
+        $cliente = new Cliente();
+        $cliente->nombres = $partesNombre[0];
+        $cliente->apellidos = $partesNombre[1] ?? '';
+        $cliente->correo = $request->input('email');
+        $cliente->telefono = $request->input('telefono');
+        $cliente->contrasena = $request->input('password');
+        $cliente->estado = 'activo';
+
+        if ($request->hasFile('foto')) {
+            $cliente->imagen = $request->file('foto')->store('clientes', 'public');
+        }
+
+        $cliente->save();
 
         return redirect('/cliente');
     }

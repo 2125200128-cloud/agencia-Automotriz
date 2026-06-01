@@ -14,11 +14,11 @@
             
             <div class="group relative">
                 <a href="/producto" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Productos ▾
+                    Productos
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/producto" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Catálogo</a>
+                        <a href="/producto" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Catalogo</a>
                         <a href="/producto/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar Producto</a>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
 
             <div class="group relative">
                 <a href="/cliente" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Clientes ▾
+                    Clientes
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
@@ -38,7 +38,7 @@
 
             <div class="group relative">
                 <a href="/pedido" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Pedidos ▾
+                    Pedidos
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
@@ -52,33 +52,38 @@
 
             <div class="group relative">
                 <a href="/proveedor" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Proveedores ▾
+                    Proveedores
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
                         <a href="/proveedor" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Proveedores</a>
-                        <a href="/proveedor/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Añadir Proveedor</a>
+                        <a href="/proveedor/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Anadir Proveedor</a>
                     </div>
                 </div>
             </div>
 
             <div class="group relative">
-                <a href="/marcas" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
+                <a href="/catalogos" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
                     Catalogos
                 </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                <div class="absolute left-0 top-full z-50 hidden w-64 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/marcas" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Marcas</a>
+                        <a href="/catalogos" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver todos los catalogos</a>
+                        <a href="/marcas" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Marcas</a>
+                        <a href="/marcas/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar marca</a>
                         <a href="/modelos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Modelos</a>
+                        <a href="/modelos/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar modelo</a>
                         <a href="/colores" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Colores</a>
+                        <a href="/colores/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar color</a>
                         <a href="/tipos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Tipos</a>
+                        <a href="/tipos/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar tipo</a>
                     </div>
                 </div>
             </div>
 
             <div class="group relative">
                 <a href="/administrador" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Admin ▾
+                    Admin
                 </a>
                 <div class="absolute right-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                     <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
@@ -88,7 +93,7 @@
                 </div>
             </div>
 
-            <a href="/cliente" class="ml-4 rounded-full bg-white px-5 py-2 text-black transition hover:bg-gray-200">Iniciar sesión</a>
+            <a href="/cliente" class="ml-4 rounded-full bg-white px-5 py-2 text-black transition hover:bg-gray-200">Iniciar sesion</a>
         </div>
     </div>
 </nav>

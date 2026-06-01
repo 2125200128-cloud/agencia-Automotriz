@@ -32,14 +32,16 @@ class ProductoController extends Controller
                 'proveedor.nombre' => 'Proveedor',
                 'precio' => 'Precio',
                 'existencia' => 'Existencia',
-                'imagen_principal' => 'Imagen',
+                'imagen_principal' => 'Imagen principal',
+                'imagen_secundaria' => 'Imagen 2',
+                'imagen_adicional' => 'Imagen 3',
                 'estado' => 'Estado',
             ],
             'urlFormulario' => '/producto/formulario',
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('productoauto.formulario', [
             'marcas' => Marca::query()->orderBy('nombre')->get(),
@@ -50,12 +52,12 @@ class ProductoController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        $datos = $request->validate([
+        $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
             'descripcion' => ['nullable', 'string'],
-            'numero_serie' => ['nullable', 'string', 'max:255'],
+            'numero_serie' => ['nullable', 'string', 'max:255', 'unique:productos,numero_serie'],
             'anio' => ['nullable', 'integer', 'min:1950', 'max:'.(date('Y') + 1)],
             'detalles' => ['nullable', 'string'],
             'precio' => ['required', 'numeric', 'min:0'],
@@ -71,13 +73,28 @@ class ProductoController extends Controller
             'imagen_adicional' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
         ]);
 
+        $producto = new Producto();
+        $producto->nombre = $request->input('nombre');
+        $producto->descripcion = $request->input('descripcion');
+        $producto->numero_serie = $request->input('numero_serie');
+        $producto->anio = $request->input('anio');
+        $producto->detalles = $request->input('detalles');
+        $producto->precio = $request->input('precio');
+        $producto->marca_id = $request->input('marca_id');
+        $producto->modelo_id = $request->input('modelo_id');
+        $producto->tipo_id = $request->input('tipo_id');
+        $producto->color_id = $request->input('color_id');
+        $producto->proveedor_id = $request->input('proveedor_id');
+        $producto->existencia = $request->input('existencia');
+        $producto->estado = $request->input('estado');
+
         foreach (['imagen_principal', 'imagen_secundaria', 'imagen_adicional'] as $imagen) {
             if ($request->hasFile($imagen)) {
-                $datos[$imagen] = $request->file($imagen)->store('productos', 'public');
+                $producto->{$imagen} = $request->file($imagen)->store('productos', 'public');
             }
         }
 
-        Producto::create($datos);
+        $producto->save();
 
         return redirect('/producto');
     }

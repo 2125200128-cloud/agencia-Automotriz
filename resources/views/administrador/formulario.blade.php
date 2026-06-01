@@ -1,4 +1,4 @@
-﻿@extends('plantilla.base')
+@extends('plantilla.base')
 
 @section('dinamico')
 <section class="min-h-screen bg-black px-4 py-10 sm:px-6 lg:px-8">
@@ -71,6 +71,3 @@
     </div>
 </section>
 @endsection
-
-
-

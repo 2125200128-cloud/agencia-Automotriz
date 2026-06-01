@@ -9,6 +9,10 @@
             <p class="mt-3 max-w-2xl text-gray-400">Consulta y gestiona el estado de las compras realizadas por los clientes.</p>
         </div>
 
+        <div class="mt-6">
+            <a href="/pedido/formulario" class="inline-flex rounded-xl bg-red-600 px-6 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-500">Registrar pedido</a>
+        </div>
+
         <div class="mt-8 rounded-xl border border-white/10 bg-zinc-950 p-5">
             <div class="grid gap-4 lg:grid-cols-[1fr_200px_200px_auto]">
                 <input type="search" placeholder="Buscar por folio o cliente..." class="w-full rounded-lg border border-white/10 bg-black p-3 text-white placeholder:text-gray-500 focus:border-red-500 focus:ring-red-500">

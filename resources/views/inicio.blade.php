@@ -249,18 +249,39 @@
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             @foreach ($vehiculos as $vehiculo)
                 @php
-                    $imagenVehiculo = $vehiculo->imagen_principal && Illuminate\Support\Facades\Storage::disk('public')->exists($vehiculo->imagen_principal)
-                        ? asset('storage/'.$vehiculo->imagen_principal)
-                        : asset($imagenesCarruselInicio[$loop->index % count($imagenesCarruselInicio)]);
+                    $imagenesVehiculo = collect([
+                        $vehiculo->imagen_principal,
+                        $vehiculo->imagen_secundaria,
+                        $vehiculo->imagen_adicional,
+                    ])->filter()->map(function ($imagen) {
+                        if (Illuminate\Support\Facades\Storage::disk('public')->exists($imagen)) {
+                            return asset('storage/'.$imagen);
+                        }
+
+                        return file_exists(public_path($imagen)) ? asset($imagen) : null;
+                    })->filter()->values();
+
+                    if ($imagenesVehiculo->isEmpty()) {
+                        $imagenesVehiculo->push(asset($imagenesCarruselInicio[$loop->index % count($imagenesCarruselInicio)]));
+                    }
                 @endphp
                 <article class="overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_0_30px_rgba(255,255,255,0.08)] transition hover:border-white/30 hover:shadow-[0_0_40px_rgba(255,255,255,0.12)]">
-                    <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900">
-                        <img src="{{ $imagenVehiculo }}" alt="{{ $vehiculo->nombre }}" class="h-full w-full object-cover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-zinc-900" data-product-gallery>
+                        @foreach ($imagenesVehiculo as $imagenVehiculo)
+                            <img src="{{ $imagenVehiculo }}" alt="{{ $vehiculo->nombre }} imagen {{ $loop->iteration }}" class="{{ $loop->first ? '' : 'hidden' }} h-full w-full object-cover" data-gallery-image>
+                        @endforeach
                         <button type="button" class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/80 text-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.12)] transition hover:bg-white hover:text-black" aria-label="Agregar a favoritos">
                             <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 19">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17.5s-8.5-4.8-8.5-11A4.7 4.7 0 0 1 11 3a4.7 4.7 0 0 1 8.5 3.5c0 6.2-8.5 11-8.5 11Z"/>
                             </svg>
                         </button>
+                        @if ($imagenesVehiculo->count() > 1)
+                            <div class="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2 rounded-full bg-black/70 px-3 py-2">
+                                @foreach ($imagenesVehiculo as $imagenVehiculo)
+                                    <button type="button" class="h-2.5 w-2.5 rounded-full {{ $loop->first ? 'bg-white' : 'bg-white/40' }}" aria-label="Mostrar imagen {{ $loop->iteration }} de {{ $vehiculo->nombre }}" data-gallery-index="{{ $loop->index }}"></button>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <div class="p-5">
@@ -285,7 +306,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 grid grid-cols-2 gap-3">
+                        <div class="mt-6 grid gap-3 sm:grid-cols-2">
                             <a href="{{ url('/cliente/cita') . '?' . http_build_query(['auto' => $vehiculo->nombre]) }}" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-zinc-900/60 py-3 text-center text-xs font-bold text-zinc-300 transition hover:bg-zinc-800 hover:text-white">
                                 Prueba de manejo
                             </a>
@@ -305,6 +326,25 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.querySelectorAll('[data-product-gallery]').forEach(function (galeria) {
+        const imagenes = galeria.querySelectorAll('[data-gallery-image]');
+
+        galeria.querySelectorAll('[data-gallery-index]').forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                imagenes.forEach(function (imagen, indice) {
+                    imagen.classList.toggle('hidden', indice !== Number(boton.dataset.galleryIndex));
+                });
+
+                galeria.querySelectorAll('[data-gallery-index]').forEach(function (punto) {
+                    punto.classList.toggle('bg-white', punto === boton);
+                    punto.classList.toggle('bg-white/40', punto !== boton);
+                });
+            });
+        });
+    });
+</script>
 
 <section class="relative overflow-hidden bg-black px-4 py-16 sm:px-6 lg:px-8">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(255,255,255,0.08),transparent_28%)]"></div>

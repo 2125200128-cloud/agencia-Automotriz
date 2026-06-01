@@ -24,26 +24,30 @@ class ModeloController extends Controller
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('modelos.formulario', [
             'marcas' => Marca::query()->orderBy('nombre')->get(),
         ]);
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        $datos = $request->validate([
+        $request->validate([
             'marca_id' => ['required', 'exists:marcas,id'],
             'nombre' => ['required', 'string', 'max:255'],
             'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
         ]);
 
+        $modelo = new ModeloVehiculo();
+        $modelo->marca_id = $request->input('marca_id');
+        $modelo->nombre = $request->input('nombre');
+
         if ($request->hasFile('imagen')) {
-            $datos['imagen'] = $request->file('imagen')->store('modelos', 'public');
+            $modelo->imagen = $request->file('imagen')->store('modelos', 'public');
         }
 
-        ModeloVehiculo::create($datos);
+        $modelo->save();
 
         return redirect('/modelos');
     }

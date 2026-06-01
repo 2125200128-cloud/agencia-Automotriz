@@ -131,7 +131,7 @@
                                     <label for="imagen_principal" class="flex flex-col items-center justify-center w-full h-32 border-2 border-white/10 border-dashed rounded-xl cursor-pointer bg-black/50 hover:bg-black transition">
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
-                                            <p class="text-xs text-zinc-400">Subir foto (.jpg, .png)</p>
+                                            <p class="text-xs text-zinc-400" data-file-name>Seleccionar imagen principal</p>
                                         </div>
                                         <input id="imagen_principal" name="imagen_principal" type="file" class="hidden" accept="image/*" />
                                     </label>
@@ -144,6 +144,7 @@
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                                         </div>
+                                        <p class="pb-2 text-xs text-zinc-400" data-file-name>Seleccionar imagen 2</p>
                                         <input id="imagen_secundaria" name="imagen_secundaria" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
@@ -155,6 +156,7 @@
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg class="w-8 h-8 mb-2 text-zinc-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                                         </div>
+                                        <p class="pb-2 text-xs text-zinc-400" data-file-name>Seleccionar imagen 3</p>
                                         <input id="imagen_adicional" name="imagen_adicional" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
@@ -171,4 +173,14 @@
         </div>
     </div>
 </section>
+<script>
+    document.querySelectorAll('input[type="file"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+            const texto = input.closest('label').querySelector('[data-file-name]');
+            if (texto && input.files.length) {
+                texto.textContent = input.files[0].name;
+            }
+        });
+    });
+</script>
 @endsection

@@ -31,7 +31,7 @@ class ProductoPedidoController extends Controller
         ]);
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('productos_pedido.formulario', [
             'pedidos' => Pedido::query()->orderByDesc('id')->get(),
@@ -39,15 +39,23 @@ class ProductoPedidoController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        ProductoPedido::create($request->validate([
+        $request->validate([
             'pedido_id' => ['required', 'exists:pedidos,id'],
             'producto_id' => ['required', 'exists:productos,id'],
             'cantidad' => ['required', 'integer', 'min:1'],
             'precio' => ['required', 'numeric', 'min:0'],
             'descuento' => ['nullable', 'numeric', 'min:0'],
-        ]));
+        ]);
+
+        $productoPedido = new ProductoPedido();
+        $productoPedido->pedido_id = $request->input('pedido_id');
+        $productoPedido->producto_id = $request->input('producto_id');
+        $productoPedido->cantidad = $request->input('cantidad');
+        $productoPedido->precio = $request->input('precio');
+        $productoPedido->descuento = $request->input('descuento');
+        $productoPedido->save();
 
         return redirect('/productos-pedido');
     }
