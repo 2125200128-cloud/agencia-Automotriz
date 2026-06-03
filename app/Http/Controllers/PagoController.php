@@ -12,7 +12,6 @@ class PagoController extends Controller
     {
         $pagos = Pago::query()
             ->with('pedido.cliente')
-            ->orderByDesc('fecha_pago')
             ->get();
 
         return view('pagos.listado', compact('pagos'));
@@ -20,21 +19,13 @@ class PagoController extends Controller
 
     public function inicio()
     {
-        return view('pagos.formulario', [
-            'pedidos' => Pedido::query()->orderByDesc('id')->get(),
-        ]);
+        $pedidos = Pedido::all();
+
+        return view('pagos.formulario', compact('pedidos'));
     }
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'pedido_id' => ['required', 'exists:pedidos,id'],
-            'metodo_pago' => ['required', 'string', 'max:255'],
-            'monto' => ['required', 'numeric', 'min:0'],
-            'fecha_pago' => ['required', 'date'],
-            'estado' => ['required', 'in:pendiente,completado,cancelado'],
-        ]);
-
         $pago = new Pago();
         $pago->pedido_id = $request->input('pedido_id');
         $pago->metodo_pago = $request->input('metodo_pago');
@@ -43,6 +34,6 @@ class PagoController extends Controller
         $pago->estado = $request->input('estado');
         $pago->save();
 
-        return redirect('/pagos');
+        return redirect('/pagos')->with('success', 'Pago guardado exitosamente.');
     }
 }

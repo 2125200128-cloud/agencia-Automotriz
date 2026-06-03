@@ -10,35 +10,29 @@ class ModeloController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Modelos',
-            'descripcion' => 'Modelos de vehiculo registrados por marca.',
-            'registros' => ModeloVehiculo::query()->with('marca')->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'marca.nombre' => 'Marca',
-                'nombre' => 'Nombre',
-                'imagen' => 'Imagen',
-            ],
-            'urlFormulario' => '/modelos/formulario',
-        ]);
+        $titulo = 'Modelos';
+        $descripcion = 'Modelos de vehiculo registrados por marca.';
+        $registros = ModeloVehiculo::with('marca')->get();
+        $columnas = [
+            'id' => 'ID',
+            'marca.nombre' => 'Marca',
+            'nombre' => 'Nombre',
+            'imagen' => 'Imagen',
+        ];
+        $urlFormulario = '/modelos/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
     {
-        return view('modelos.formulario', [
-            'marcas' => Marca::query()->orderBy('nombre')->get(),
-        ]);
+        $marcas = Marca::all();
+
+        return view('modelos.formulario', compact('marcas'));
     }
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'marca_id' => ['required', 'exists:marcas,id'],
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
-
         $modelo = new ModeloVehiculo();
         $modelo->marca_id = $request->input('marca_id');
         $modelo->nombre = $request->input('nombre');
@@ -49,6 +43,6 @@ class ModeloController extends Controller
 
         $modelo->save();
 
-        return redirect('/modelos');
+        return redirect('/modelos')->with('success', 'Modelo guardado exitosamente.');
     }
 }

@@ -9,21 +9,21 @@ class ClienteController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Clientes',
-            'descripcion' => 'Clientes registrados en la plataforma.',
-            'registros' => Cliente::query()->orderBy('nombres')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombres' => 'Nombres',
-                'apellidos' => 'Apellidos',
-                'correo' => 'Correo',
-                'telefono' => 'Telefono',
-                'direccion' => 'Direccion',
-                'estado' => 'Estado',
-            ],
-            'urlFormulario' => '/cliente/formulario',
-        ]);
+        $titulo = 'Clientes';
+        $descripcion = 'Clientes registrados en la plataforma.';
+        $registros = Cliente::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombres' => 'Nombres',
+            'apellidos' => 'Apellidos',
+            'correo' => 'Correo',
+            'telefono' => 'Telefono',
+            'direccion' => 'Direccion',
+            'estado' => 'Estado',
+        ];
+        $urlFormulario = '/cliente/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
@@ -33,15 +33,7 @@ class ClienteController extends Controller
 
     public function guardar(Request $request)
     {
-        $datos = $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:clientes,correo'],
-            'telefono' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:6'],
-            'foto' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
-
-        $partesNombre = preg_split('/\s+/', trim($datos['nombre']), 2);
+        $partesNombre = preg_split('/\s+/', trim($request->input('nombre')), 2);
 
         $cliente = new Cliente();
         $cliente->nombres = $partesNombre[0];
@@ -57,6 +49,6 @@ class ClienteController extends Controller
 
         $cliente->save();
 
-        return redirect('/cliente');
+        return redirect('/cliente')->with('success', 'Cliente guardado exitosamente.');
     }
 }

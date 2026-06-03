@@ -9,9 +9,9 @@ class AdministradorController extends Controller
 {
     public function listado()
     {
-        return view('administrador.listado', [
-            'administradores' => Administrador::query()->orderBy('nombres')->get(),
-        ]);
+        $administradores = Administrador::all();
+
+        return view('administrador.listado', compact('administradores'));
     }
 
     public function inicio()
@@ -21,17 +21,6 @@ class AdministradorController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombres' => ['required', 'string', 'max:255'],
-            'apellidos' => ['required', 'string', 'max:255'],
-            'correo' => ['required', 'email', 'max:255', 'unique:administradores,correo'],
-            'usuario' => ['required', 'string', 'max:255', 'unique:administradores,usuario'],
-            'contrasena' => ['required', 'string', 'min:6'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-            'rol' => ['required', 'in:superadministrador,vendedor,capturista'],
-            'estado' => ['required', 'in:activo,inactivo'],
-        ]);
-
         $administrador = new Administrador();
         $administrador->nombres = $request->input('nombres');
         $administrador->apellidos = $request->input('apellidos');
@@ -47,6 +36,6 @@ class AdministradorController extends Controller
 
         $administrador->save();
 
-        return redirect('/administrador');
+        return redirect('/administrador')->with('success', 'Administrador guardado exitosamente.');
     }
 }

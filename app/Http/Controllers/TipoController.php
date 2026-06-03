@@ -9,17 +9,17 @@ class TipoController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Tipos',
-            'descripcion' => 'Tipos de vehiculo registrados.',
-            'registros' => Tipo::query()->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombre' => 'Nombre',
-                'imagen' => 'Imagen',
-            ],
-            'urlFormulario' => '/tipos/formulario',
-        ]);
+        $titulo = 'Tipos';
+        $descripcion = 'Tipos de vehiculo registrados.';
+        $registros = Tipo::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombre' => 'Nombre',
+            'imagen' => 'Imagen',
+        ];
+        $urlFormulario = '/tipos/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
@@ -29,11 +29,6 @@ class TipoController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
-
         $tipo = new Tipo();
         $tipo->nombre = $request->input('nombre');
 
@@ -43,6 +38,6 @@ class TipoController extends Controller
 
         $tipo->save();
 
-        return redirect('/tipos');
+        return redirect('/tipos')->with('success', 'Tipo guardado exitosamente.');
     }
 }

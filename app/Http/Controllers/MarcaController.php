@@ -9,17 +9,17 @@ class MarcaController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Marcas',
-            'descripcion' => 'Marcas disponibles para el catalogo de vehiculos.',
-            'registros' => Marca::query()->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombre' => 'Nombre',
-                'imagen' => 'Imagen',
-            ],
-            'urlFormulario' => '/marcas/formulario',
-        ]);
+        $titulo = 'Marcas';
+        $descripcion = 'Marcas disponibles para el catalogo de vehiculos.';
+        $registros = Marca::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombre' => 'Nombre',
+            'imagen' => 'Imagen',
+        ];
+        $urlFormulario = '/marcas/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
@@ -29,11 +29,6 @@ class MarcaController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
-
         $marca = new Marca();
         $marca->nombre = $request->input('nombre');
 
@@ -43,6 +38,6 @@ class MarcaController extends Controller
 
         $marca->save();
 
-        return redirect('/marcas');
+        return redirect('/marcas')->with('success', 'Marca guardada exitosamente.');
     }
 }

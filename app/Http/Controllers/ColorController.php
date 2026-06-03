@@ -9,17 +9,17 @@ class ColorController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Colores',
-            'descripcion' => 'Colores disponibles para los vehiculos.',
-            'registros' => Color::query()->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombre' => 'Nombre',
-                'imagen' => 'Imagen',
-            ],
-            'urlFormulario' => '/colores/formulario',
-        ]);
+        $titulo = 'Colores';
+        $descripcion = 'Colores disponibles para los vehiculos.';
+        $registros = Color::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombre' => 'Nombre',
+            'imagen' => 'Imagen',
+        ];
+        $urlFormulario = '/colores/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
@@ -29,11 +29,6 @@ class ColorController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
-
         $color = new Color();
         $color->nombre = $request->input('nombre');
 
@@ -43,6 +38,6 @@ class ColorController extends Controller
 
         $color->save();
 
-        return redirect('/colores');
+        return redirect('/colores')->with('success', 'Color guardado exitosamente.');
     }
 }

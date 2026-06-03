@@ -12,7 +12,6 @@ class PedidoController extends Controller
     {
         $pedidos = Pedido::query()
             ->with(['cliente', 'productos', 'pagos'])
-            ->orderByDesc('fecha')
             ->get();
 
         return view('pedido.listado', compact('pedidos'));
@@ -20,22 +19,13 @@ class PedidoController extends Controller
 
     public function inicio()
     {
-        return view('pedido.formulario', [
-            'clientes' => Cliente::query()->orderBy('nombres')->get(),
-        ]);
+        $clientes = Cliente::all();
+
+        return view('pedido.formulario', compact('clientes'));
     }
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'cliente_id' => ['required', 'exists:clientes,id'],
-            'fecha' => ['required', 'date'],
-            'descuento' => ['required', 'numeric', 'min:0'],
-            'iva' => ['required', 'numeric', 'min:0'],
-            'total' => ['required', 'numeric', 'min:0'],
-            'estado' => ['required', 'in:pendiente,confirmado,completado,cancelado'],
-        ]);
-
         $pedido = new Pedido();
         $pedido->cliente_id = $request->input('cliente_id');
         $pedido->fecha = $request->input('fecha');
@@ -45,6 +35,6 @@ class PedidoController extends Controller
         $pedido->estado = $request->input('estado');
         $pedido->save();
 
-        return redirect('/pedido');
+        return redirect('/pedido')->with('success', 'Pedido guardado exitosamente.');
     }
 }

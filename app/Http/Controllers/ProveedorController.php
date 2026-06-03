@@ -9,21 +9,21 @@ class ProveedorController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Proveedores',
-            'descripcion' => 'Directorio de proveedores registrados.',
-            'registros' => Proveedor::query()->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombre' => 'Nombre',
-                'contacto' => 'Contacto',
-                'telefono' => 'Telefono',
-                'correo' => 'Correo',
-                'direccion' => 'Direccion',
-                'estado' => 'Estado',
-            ],
-            'urlFormulario' => '/proveedor/formulario',
-        ]);
+        $titulo = 'Proveedores';
+        $descripcion = 'Directorio de proveedores registrados.';
+        $registros = Proveedor::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombre' => 'Nombre',
+            'contacto' => 'Contacto',
+            'telefono' => 'Telefono',
+            'correo' => 'Correo',
+            'direccion' => 'Direccion',
+            'estado' => 'Estado',
+        ];
+        $urlFormulario = '/proveedor/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
     public function inicio()
@@ -33,13 +33,6 @@ class ProveedorController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombre_empresa' => ['required', 'string', 'max:255'],
-            'telefono' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'nombre_representante' => ['required', 'string', 'max:255'],
-        ]);
-
         $proveedor = new Proveedor();
         $proveedor->nombre = $request->input('nombre_empresa');
         $proveedor->contacto = $request->input('nombre_representante');
@@ -48,6 +41,6 @@ class ProveedorController extends Controller
         $proveedor->estado = 'activo';
         $proveedor->save();
 
-        return redirect('/proveedor');
+        return redirect('/proveedor')->with('success', 'Proveedor guardado exitosamente.');
     }
 }
