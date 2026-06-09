@@ -50,9 +50,9 @@
     <div class="vm-navbar-container">
         <a href="/" class="flex items-center gap-3">
             <span
-                class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[#2f3d4f] bg-[#0f141b] shadow-[0_0_18px_rgba(28,105,212,0.18)]">
+                class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-[#2f3d4f] bg-black p-1 shadow-[0_0_18px_rgba(28,105,212,0.18)]">
                 <img src="{{ asset('imagenes/logoVeloceMotors.png') }}" alt="Logo Veloce Motors"
-                    class="h-full w-full object-cover">
+                    class="h-full w-full object-contain">
             </span>
             <span>
                 <span class="block text-xl font-semibold tracking-tight text-[#f8fafc]">Veloce Motors</span>
