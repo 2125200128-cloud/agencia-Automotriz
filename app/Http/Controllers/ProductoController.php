@@ -33,7 +33,7 @@ class ProductoController extends Controller
 
     public function guardar(Request $request)
     {
-        $producto = new Producto();
+        $producto = new Producto;
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->numero_serie = $request->input('numero_serie');
@@ -64,7 +64,7 @@ class ProductoController extends Controller
     {
         $producto = Producto::with(['marca', 'modelo', 'tipo', 'color', 'proveedor'])->find($id);
 
-        if (!$producto) {
+        if (! $producto) {
             abort(404);
         }
 
@@ -75,7 +75,7 @@ class ProductoController extends Controller
     {
         $producto = Producto::find($id);
 
-        if (!$producto) {
+        if (! $producto) {
             abort(404);
         }
 
@@ -92,7 +92,7 @@ class ProductoController extends Controller
     {
         $producto = Producto::find($id);
 
-        if (!$producto) {
+        if (! $producto) {
             abort(404);
         }
 
@@ -100,7 +100,7 @@ class ProductoController extends Controller
             'nombre' => ['required', 'string', 'max:255'],
             'descripcion' => ['nullable', 'string'],
             'numero_serie' => ['nullable', 'string', 'max:255'],
-            'anio' => ['nullable', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
+            'anio' => ['nullable', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
             'detalles' => ['nullable', 'string'],
             'precio' => ['required', 'numeric', 'min:0'],
             'marca_id' => ['nullable', 'exists:marcas,id'],
@@ -150,7 +150,7 @@ class ProductoController extends Controller
     {
         $producto = Producto::with(['marca', 'modelo', 'tipo', 'color', 'proveedor'])->find($id);
 
-        if (!$producto) {
+        if (! $producto) {
             abort(404);
         }
 
@@ -161,7 +161,7 @@ class ProductoController extends Controller
     {
         $producto = Producto::find($id);
 
-        if (!$producto) {
+        if (! $producto) {
             abort(404);
         }
 

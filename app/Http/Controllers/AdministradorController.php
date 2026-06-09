@@ -23,7 +23,7 @@ class AdministradorController extends Controller
 
     public function guardar(Request $request)
     {
-        $administrador = new Administrador();
+        $administrador = new Administrador;
         $administrador->nombres = $request->input('nombres');
         $administrador->apellidos = $request->input('apellidos');
         $administrador->correo = $request->input('correo');
@@ -45,7 +45,7 @@ class AdministradorController extends Controller
     {
         $administrador = Administrador::find($id);
 
-        if (!$administrador) {
+        if (! $administrador) {
             abort(404);
         }
 
@@ -56,7 +56,7 @@ class AdministradorController extends Controller
     {
         $administrador = Administrador::find($id);
 
-        if (!$administrador) {
+        if (! $administrador) {
             abort(404);
         }
 
@@ -67,7 +67,7 @@ class AdministradorController extends Controller
     {
         $administrador = Administrador::find($id);
 
-        if (!$administrador) {
+        if (! $administrador) {
             abort(404);
         }
 
@@ -110,7 +110,7 @@ class AdministradorController extends Controller
     {
         $administrador = Administrador::find($id);
 
-        if (!$administrador) {
+        if (! $administrador) {
             abort(404);
         }
 
@@ -121,7 +121,7 @@ class AdministradorController extends Controller
     {
         $administrador = Administrador::find($id);
 
-        if (!$administrador) {
+        if (! $administrador) {
             abort(404);
         }
 

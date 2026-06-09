@@ -26,7 +26,7 @@ class PagoController extends Controller
 
     public function guardar(Request $request)
     {
-        $pago = new Pago();
+        $pago = new Pago;
         $pago->pedido_id = $request->input('pedido_id');
         $pago->metodo_pago = $request->input('metodo_pago');
         $pago->monto = $request->input('monto');

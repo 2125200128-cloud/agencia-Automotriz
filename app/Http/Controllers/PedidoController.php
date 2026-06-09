@@ -26,7 +26,7 @@ class PedidoController extends Controller
 
     public function guardar(Request $request)
     {
-        $pedido = new Pedido();
+        $pedido = new Pedido;
         $pedido->cliente_id = $request->input('cliente_id');
         $pedido->fecha = $request->input('fecha');
         $pedido->descuento = $request->input('descuento');

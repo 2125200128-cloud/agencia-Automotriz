@@ -38,7 +38,7 @@ class ProductoPedidoController extends Controller
 
     public function guardar(Request $request)
     {
-        $productoPedido = new ProductoPedido();
+        $productoPedido = new ProductoPedido;
         $productoPedido->pedido_id = $request->input('pedido_id');
         $productoPedido->producto_id = $request->input('producto_id');
         $productoPedido->cantidad = $request->input('cantidad');

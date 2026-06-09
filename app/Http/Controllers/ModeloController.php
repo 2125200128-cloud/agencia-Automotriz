@@ -25,7 +25,7 @@ class ModeloController extends Controller
 
     public function guardar(Request $request)
     {
-        $modelo = new ModeloVehiculo();
+        $modelo = new ModeloVehiculo;
         $modelo->marca_id = $request->input('marca_id');
         $modelo->nombre = $request->input('nombre');
 
@@ -42,7 +42,7 @@ class ModeloController extends Controller
     {
         $modelo = ModeloVehiculo::with('marca')->find($id);
 
-        if (!$modelo) {
+        if (! $modelo) {
             abort(404);
         }
 
@@ -53,7 +53,7 @@ class ModeloController extends Controller
     {
         $modelo = ModeloVehiculo::find($id);
 
-        if (!$modelo) {
+        if (! $modelo) {
             abort(404);
         }
 
@@ -66,7 +66,7 @@ class ModeloController extends Controller
     {
         $modelo = ModeloVehiculo::find($id);
 
-        if (!$modelo) {
+        if (! $modelo) {
             abort(404);
         }
 
@@ -96,7 +96,7 @@ class ModeloController extends Controller
     {
         $modelo = ModeloVehiculo::with('marca')->find($id);
 
-        if (!$modelo) {
+        if (! $modelo) {
             abort(404);
         }
 
@@ -107,7 +107,7 @@ class ModeloController extends Controller
     {
         $modelo = ModeloVehiculo::find($id);
 
-        if (!$modelo) {
+        if (! $modelo) {
             abort(404);
         }
 

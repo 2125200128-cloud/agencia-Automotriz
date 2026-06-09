@@ -26,13 +26,13 @@ class ClienteController extends Controller
         $nombres = $request->input('nombres');
         $apellidos = $request->input('apellidos');
 
-        if (!$nombres && $request->filled('nombre')) {
+        if (! $nombres && $request->filled('nombre')) {
             $partesNombre = preg_split('/\s+/', trim($request->input('nombre')), 2);
             $nombres = $partesNombre[0] ?? '';
             $apellidos = $partesNombre[1] ?? '';
         }
 
-        $cliente = new Cliente();
+        $cliente = new Cliente;
         $cliente->nombres = $nombres;
         $cliente->apellidos = $apellidos;
         $cliente->correo = $request->input('correo', $request->input('email'));
@@ -56,7 +56,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::find($id);
 
-        if (!$cliente) {
+        if (! $cliente) {
             abort(404);
         }
 
@@ -67,7 +67,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::find($id);
 
-        if (!$cliente) {
+        if (! $cliente) {
             abort(404);
         }
 
@@ -78,7 +78,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::find($id);
 
-        if (!$cliente) {
+        if (! $cliente) {
             abort(404);
         }
 
@@ -121,7 +121,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::find($id);
 
-        if (!$cliente) {
+        if (! $cliente) {
             abort(404);
         }
 
@@ -132,7 +132,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::find($id);
 
-        if (!$cliente) {
+        if (! $cliente) {
             abort(404);
         }
 

@@ -29,7 +29,7 @@ class TipoController extends Controller
 
     public function guardar(Request $request)
     {
-        $tipo = new Tipo();
+        $tipo = new Tipo;
         $tipo->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {

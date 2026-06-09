@@ -22,7 +22,7 @@ class ProveedorController extends Controller
 
     public function guardar(Request $request)
     {
-        $proveedor = new Proveedor();
+        $proveedor = new Proveedor;
         $proveedor->nombre = $request->input('nombre', $request->input('nombre_empresa'));
         $proveedor->contacto = $request->input('contacto', $request->input('nombre_representante'));
         $proveedor->telefono = $request->input('telefono');
@@ -38,7 +38,7 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::find($id);
 
-        if (!$proveedor) {
+        if (! $proveedor) {
             abort(404);
         }
 
@@ -49,7 +49,7 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::find($id);
 
-        if (!$proveedor) {
+        if (! $proveedor) {
             abort(404);
         }
 
@@ -60,7 +60,7 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::find($id);
 
-        if (!$proveedor) {
+        if (! $proveedor) {
             abort(404);
         }
 
@@ -92,7 +92,7 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::find($id);
 
-        if (!$proveedor) {
+        if (! $proveedor) {
             abort(404);
         }
 
@@ -103,7 +103,7 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::find($id);
 
-        if (!$proveedor) {
+        if (! $proveedor) {
             abort(404);
         }
 

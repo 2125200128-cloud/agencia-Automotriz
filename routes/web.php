@@ -1,18 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\PedidoController;
-use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\ProveedorController;
-use App\Http\Controllers\PagoController;
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\ModeloController;
-use App\Http\Controllers\ColorController;
-use App\Http\Controllers\TipoController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProductoPedidoController;
-use App\Http\Controllers\InicioController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\TipoController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [InicioController::class, 'inicio']);
 

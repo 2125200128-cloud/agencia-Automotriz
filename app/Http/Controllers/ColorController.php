@@ -22,7 +22,7 @@ class ColorController extends Controller
 
     public function guardar(Request $request)
     {
-        $color = new Color();
+        $color = new Color;
         $color->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
@@ -38,7 +38,7 @@ class ColorController extends Controller
     {
         $color = Color::find($id);
 
-        if (!$color) {
+        if (! $color) {
             abort(404);
         }
 
@@ -49,7 +49,7 @@ class ColorController extends Controller
     {
         $color = Color::find($id);
 
-        if (!$color) {
+        if (! $color) {
             abort(404);
         }
 
@@ -60,7 +60,7 @@ class ColorController extends Controller
     {
         $color = Color::find($id);
 
-        if (!$color) {
+        if (! $color) {
             abort(404);
         }
 
@@ -88,7 +88,7 @@ class ColorController extends Controller
     {
         $color = Color::find($id);
 
-        if (!$color) {
+        if (! $color) {
             abort(404);
         }
 
@@ -99,7 +99,7 @@ class ColorController extends Controller
     {
         $color = Color::find($id);
 
-        if (!$color) {
+        if (! $color) {
             abort(404);
         }
 

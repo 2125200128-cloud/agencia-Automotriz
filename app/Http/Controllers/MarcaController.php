@@ -22,7 +22,7 @@ class MarcaController extends Controller
 
     public function guardar(Request $request)
     {
-        $marca = new Marca();
+        $marca = new Marca;
         $marca->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
@@ -38,7 +38,7 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (!$marca) {
+        if (! $marca) {
             abort(404);
         }
 
@@ -49,7 +49,7 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (!$marca) {
+        if (! $marca) {
             abort(404);
         }
 
@@ -60,7 +60,7 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (!$marca) {
+        if (! $marca) {
             abort(404);
         }
 
@@ -88,7 +88,7 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (!$marca) {
+        if (! $marca) {
             abort(404);
         }
 
@@ -99,7 +99,7 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (!$marca) {
+        if (! $marca) {
             abort(404);
         }
 
