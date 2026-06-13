@@ -12,9 +12,11 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProductoPedidoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\TipoController;
+use App\Http\Controllers\TopbarInfoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [InicioController::class, 'inicio']);
+Route::get('/topbar-info', [TopbarInfoController::class, 'show'])->name('topbar.info');
 
 Route::get('/administrador', [AdministradorController::class, 'listado']);
 Route::get('/administrador/formulario', [AdministradorController::class, 'inicio']);
