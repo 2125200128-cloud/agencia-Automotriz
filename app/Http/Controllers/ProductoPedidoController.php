@@ -11,44 +11,41 @@ class ProductoPedidoController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Productos de pedidos',
-            'descripcion' => 'Detalle de productos registrados en cada pedido.',
-            'registros' => ProductoPedido::query()
-                ->with(['pedido.cliente', 'producto'])
-                ->orderByDesc('id')
-                ->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'pedido_id' => 'Pedido',
-                'pedido.cliente.correo' => 'Cliente',
-                'producto.nombre' => 'Producto',
-                'cantidad' => 'Cantidad',
-                'precio' => 'Precio',
-                'descuento' => 'Descuento',
-            ],
-            'urlFormulario' => '/productos-pedido/formulario',
-        ]);
+        $titulo = 'Productos de pedidos';
+        $descripcion = 'Detalle de productos registrados en cada pedido.';
+        $registros = ProductoPedido::with(['pedido.cliente', 'producto'])->get();
+        $columnas = [
+            'id' => 'ID',
+            'pedido_id' => 'Pedido',
+            'pedido.cliente.correo' => 'Cliente',
+            'producto.nombre' => 'Producto',
+            'cantidad' => 'Cantidad',
+            'precio' => 'Precio',
+            'descuento' => 'Descuento',
+        ];
+        $urlFormulario = '/productos-pedido/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
-    public function formulario()
+    public function inicio()
     {
-        return view('productos_pedido.formulario', [
-            'pedidos' => Pedido::query()->orderByDesc('id')->get(),
-            'productos' => Producto::query()->orderBy('nombre')->get(),
-        ]);
+        $pedidos = Pedido::all();
+        $productos = Producto::all();
+
+        return view('productos_pedido.formulario', compact('pedidos', 'productos'));
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        ProductoPedido::create($request->validate([
-            'pedido_id' => ['required', 'exists:pedidos,id'],
-            'producto_id' => ['required', 'exists:productos,id'],
-            'cantidad' => ['required', 'integer', 'min:1'],
-            'precio' => ['required', 'numeric', 'min:0'],
-            'descuento' => ['nullable', 'numeric', 'min:0'],
-        ]));
+        $productoPedido = new ProductoPedido;
+        $productoPedido->pedido_id = $request->input('pedido_id');
+        $productoPedido->producto_id = $request->input('producto_id');
+        $productoPedido->cantidad = $request->input('cantidad');
+        $productoPedido->precio = $request->input('precio');
+        $productoPedido->descuento = $request->input('descuento');
+        $productoPedido->save();
 
-        return redirect('/productos-pedido');
+        return redirect('/productos-pedido')->with('success', 'Producto de pedido guardado exitosamente.');
     }
 }

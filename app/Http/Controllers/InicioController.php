@@ -17,8 +17,10 @@ class InicioController extends Controller
                 ->with(['marca', 'tipo'])
                 ->where('estado', 'activo')
                 ->orderByDesc('id')
-                ->limit(3)
-                ->get(),
+                ->get()
+                ->unique(fn ($producto) => $producto->numero_serie ?: mb_strtolower($producto->nombre))
+                ->take(3)
+                ->values(),
             'totalVehiculos' => Producto::query()->count(),
         ]);
     }

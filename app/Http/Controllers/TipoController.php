@@ -9,37 +9,35 @@ class TipoController extends Controller
 {
     public function listado()
     {
-        return view('catalogos.listado', [
-            'titulo' => 'Tipos',
-            'descripcion' => 'Tipos de vehiculo registrados.',
-            'registros' => Tipo::query()->orderBy('nombre')->get(),
-            'columnas' => [
-                'id' => 'ID',
-                'nombre' => 'Nombre',
-                'imagen' => 'Imagen',
-            ],
-            'urlFormulario' => '/tipos/formulario',
-        ]);
+        $titulo = 'Tipos';
+        $descripcion = 'Tipos de vehiculo registrados.';
+        $registros = Tipo::all();
+        $columnas = [
+            'id' => 'ID',
+            'nombre' => 'Nombre',
+            'imagen' => 'Imagen',
+        ];
+        $urlFormulario = '/tipos/formulario';
+
+        return view('catalogos.listado', compact('titulo', 'descripcion', 'registros', 'columnas', 'urlFormulario'));
     }
 
-    public function formulario()
+    public function inicio()
     {
         return view('tipos.formulario');
     }
 
-    public function store(Request $request)
+    public function guardar(Request $request)
     {
-        $datos = $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['nullable', 'file', 'mimetypes:image/*', 'max:10240'],
-        ]);
+        $tipo = new Tipo;
+        $tipo->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
-            $datos['imagen'] = $request->file('imagen')->store('tipos', 'public');
+            $tipo->imagen = $request->file('imagen')->store('tipos', 'public');
         }
 
-        Tipo::create($datos);
+        $tipo->save();
 
-        return redirect('/tipos');
+        return redirect('/tipos')->with('success', 'Tipo guardado exitosamente.');
     }
 }

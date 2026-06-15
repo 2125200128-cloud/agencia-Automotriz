@@ -1,94 +1,160 @@
-<nav class="sticky top-0 z-50 border-b border-white/10 bg-black/95 shadow-[0_0_28px_rgba(255,255,255,0.10)] backdrop-blur">
-    <div class="mx-auto flex max-w-screen-2xl flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
+@php
+    $navLinkClass = function ($active) {
+        return 'inline-flex px-3 py-2 transition ' .
+            ($active
+                ? 'bg-[#1c69d4] text-white rounded-lg shadow-[0_0_16px_rgba(28,105,212,0.28)]'
+                : 'text-[#d8e2ef] hover:text-white hover:bg-[#172232] rounded-lg');
+    };
+
+    $dropdownLinkClass = function ($active = false) {
+        return 'px-4 py-3 transition ' .
+            ($active
+                ? 'bg-[#1c69d4] text-white rounded-lg'
+                : 'text-[#0b1f3a] hover:text-[#003f7d] hover:bg-[#e8f1ff] rounded-lg');
+    };
+
+    $inicioActive = request()->routeIs('inicio', 'dashboard') || request()->is('/', 'dashboard');
+    $productosActive =
+        request()->routeIs('productos.*', 'producto.*', 'productos', 'producto') ||
+        request()->is('producto', 'producto/*', 'productos', 'productos/*');
+    $clientesActive =
+        request()->routeIs('clientes.*', 'cliente.*', 'clientes', 'cliente') ||
+        request()->is('cliente', 'cliente/*', 'clientes', 'clientes/*');
+    $pedidosActive =
+        request()->routeIs('pedidos.*', 'pedido.*', 'pedidos', 'pedido') ||
+        request()->is('pedido', 'pedido/*', 'pedidos', 'pedidos/*', 'productos-pedido', 'productos-pedido/*');
+    $pagosActive =
+        request()->routeIs('pagos.*', 'pago.*', 'pagos', 'pago') || request()->is('pagos', 'pagos/*', 'pago', 'pago/*');
+    $proveedoresActive =
+        request()->routeIs('proveedores.*', 'proveedor.*', 'proveedores', 'proveedor') ||
+        request()->is('proveedor', 'proveedor/*', 'proveedores', 'proveedores/*');
+    $catalogosActive =
+        request()->routeIs('catalogos.*', 'catalogos', 'marcas.*', 'modelos.*', 'colores.*', 'tipos.*') ||
+        request()->is(
+            'catalogos',
+            'catalogos/*',
+            'marcas',
+            'marcas/*',
+            'modelos',
+            'modelos/*',
+            'colores',
+            'colores/*',
+            'tipos',
+            'tipos/*',
+        );
+    $adminActive =
+        request()->routeIs('administradores.*', 'administrador.*', 'administradores', 'administrador') ||
+        request()->is('administrador', 'administrador/*', 'administradores', 'administradores/*');
+@endphp
+<nav class="vm-navbar">
+    <div class="vm-navbar-container">
         <a href="/" class="flex items-center gap-3">
-            <span class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-white/25 bg-zinc-900/80 shadow-[0_0_22px_rgba(255,255,255,0.12)]">
-                <img src="{{ asset('imagenes/logoVeloceMotors.png') }}" alt="Logo Veloce Motors" class="h-full w-full object-cover">
+            <span
+                class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-[#2f3d4f] bg-black p-1 shadow-[0_0_18px_rgba(28,105,212,0.18)]">
+                <img src="{{ asset('imagenes/logoVeloceMotors.png') }}" alt="Logo Veloce Motors"
+                    class="h-full w-full object-contain">
             </span>
             <span>
-                <span class="block text-xl font-black text-white">Veloce Motors</span>
+                <span class="block text-xl font-semibold tracking-tight text-[#f8fafc]">Veloce Motors</span>
             </span>
         </a>
-
-        <div class="flex flex-wrap items-center gap-1 text-sm font-semibold">
-            <a href="/" class="rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">Inicio</a>
-            
+        <div class="flex flex-wrap items-center gap-1 text-sm font-medium">
+            <a href="/" class="{{ $navLinkClass($inicioActive) }}">Iniciar sesion</a>
             <div class="group relative">
-                <a href="/producto" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Productos ▾
+                <a href="/producto" class="{{ $navLinkClass($productosActive) }}">
+                    Productos
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/producto" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Catálogo</a>
-                        <a href="/producto/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar Producto</a>
+                    <div class="vm-dropdown-menu">
+                        <a href="/producto" class="{{ $dropdownLinkClass(request()->is('producto')) }}">Ver Catalogo</a>
+                        <a href="/producto/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('producto/formulario')) }}">+ Agregar
+                            Producto</a>
                     </div>
                 </div>
             </div>
-
             <div class="group relative">
-                <a href="/cliente" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Clientes ▾
+                <a href="/cliente" class="{{ $navLinkClass($clientesActive) }}">
+                    Clientes
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/cliente" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Clientes</a>
-                        <a href="/cliente/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Nuevo Cliente</a>
+                    <div class="vm-dropdown-menu">
+                        <a href="/cliente" class="{{ $dropdownLinkClass(request()->is('cliente')) }}">Ver Clientes</a>
+                        <a href="/cliente/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('cliente/formulario')) }}">+ Nuevo Cliente</a>
                     </div>
                 </div>
             </div>
-
             <div class="group relative">
-                <a href="/pedido" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Pedidos ▾
+                <a href="/pedido" class="{{ $navLinkClass($pedidosActive) }}">
+                    Pedidos
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/pedido" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Historial de Pedidos</a>
-                        <a href="/pagos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Historial de Pagos</a>
-                        <a href="/productos-pedido" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Productos por Pedido</a>
-                        <a href="/productos-pedido/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Agregar Producto</a>
+                    <div class="vm-dropdown-menu">
+                        <a href="/pedido" class="{{ $dropdownLinkClass(request()->is('pedido')) }}">Historial de
+                            Pedidos</a>
+                        <a href="/productos-pedido"
+                            class="{{ $dropdownLinkClass(request()->is('productos-pedido')) }}">Productos por
+                            Pedido</a>
+                        <a href="/productos-pedido/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('productos-pedido/formulario')) }}">+ Agregar
+                            Producto</a>
                     </div>
                 </div>
             </div>
-
+            <a href="/pagos" class="{{ $navLinkClass($pagosActive) }}">Pagos</a>
             <div class="group relative">
-                <a href="/proveedor" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Proveedores ▾
+                <a href="/proveedor" class="{{ $navLinkClass($proveedoresActive) }}">
+                    Proveedores
                 </a>
                 <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/proveedor" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Ver Proveedores</a>
-                        <a href="/proveedor/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Añadir Proveedor</a>
+                    <div class="vm-dropdown-menu">
+                        <a href="/proveedor" class="{{ $dropdownLinkClass(request()->is('proveedor')) }}">Ver
+                            Proveedores</a>
+                        <a href="/proveedor/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('proveedor/formulario')) }}">+ Anadir
+                            Proveedor</a>
                     </div>
                 </div>
             </div>
-
             <div class="group relative">
-                <a href="/marcas" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
+                <a href="/catalogos" class="{{ $navLinkClass($catalogosActive) }}">
                     Catalogos
                 </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/marcas" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Marcas</a>
-                        <a href="/modelos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Modelos</a>
-                        <a href="/colores" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Colores</a>
-                        <a href="/tipos" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Tipos</a>
+                <div class="absolute left-0 top-full z-50 hidden w-64 pt-2 group-hover:block">
+                    <div class="vm-dropdown-menu">
+                        <a href="/catalogos" class="{{ $dropdownLinkClass(request()->is('catalogos')) }}">Ver todos los
+                            catalogos</a>
+                        <a href="/marcas" class="{{ $dropdownLinkClass(request()->is('marcas')) }}">Marcas</a>
+                        <a href="/marcas/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('marcas/formulario')) }}">+ Agregar marca</a>
+                        <a href="/modelos" class="{{ $dropdownLinkClass(request()->is('modelos')) }}">Modelos</a>
+                        <a href="/modelos/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('modelos/formulario')) }}">+ Agregar modelo</a>
+                        <a href="/colores" class="{{ $dropdownLinkClass(request()->is('colores')) }}">Colores</a>
+                        <a href="/colores/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('colores/formulario')) }}">+ Agregar color</a>
+                        <a href="/tipos" class="{{ $dropdownLinkClass(request()->is('tipos')) }}">Tipos</a>
+                        <a href="/tipos/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('tipos/formulario')) }}">+ Agregar tipo</a>
                     </div>
                 </div>
             </div>
-
             <div class="group relative">
-                <a href="/administrador" class="inline-flex rounded-lg px-3 py-2 text-gray-200 transition hover:bg-zinc-800 hover:text-white">
-                    Admin ▾
+                <a href="/administrador" class="{{ $navLinkClass($adminActive) }}">
+                    Admin
                 </a>
                 <div class="absolute right-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-                        <a href="/administrador" class="px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">Personal</a>
-                        <a href="/administrador/formulario" class="border-t border-white/5 px-4 py-3 text-gray-300 hover:bg-zinc-800 hover:text-white">+ Nuevo Admin</a>
+                    <div class="vm-dropdown-menu">
+                        <a href="/administrador"
+                            class="{{ $dropdownLinkClass(request()->is('administrador')) }}">Personal</a>
+                        <a href="/administrador/formulario"
+                            class="{{ $dropdownLinkClass(request()->is('administrador/formulario')) }}">+ Nuevo
+                            Admin</a>
                     </div>
                 </div>
             </div>
 
-            <a href="/cliente" class="ml-4 rounded-full bg-white px-5 py-2 text-black transition hover:bg-gray-200">Iniciar sesión</a>
         </div>
     </div>
 </nav>
