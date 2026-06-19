@@ -14,12 +14,12 @@ class AdministradorController extends Controller
     {
         $administradores = Administrador::all();
 
-        return view('administradores.inicio', compact('administradores'));
+        return view('administrador.listado', compact('administradores'));
     }
 
     public function inicio()
     {
-        return view('administradores.formulario');
+        return view('administrador.formulario');
     }
 
     public function guardar(Request $request)
@@ -59,7 +59,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return view('administradores.ver', compact('administrador'));
+        return redirect('/administrador');
     }
 
     public function edit($id)
@@ -70,7 +70,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return view('administradores.editar', compact('administrador'));
+        return redirect('/administrador');
     }
 
     public function update(Request $request, $id)
@@ -132,7 +132,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return view('administradores.eliminar', compact('administrador'));
+        return redirect('/administrador');
     }
 
     public function destroy($id)

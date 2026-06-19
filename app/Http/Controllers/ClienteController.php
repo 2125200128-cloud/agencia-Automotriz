@@ -15,12 +15,12 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-        return view('clientes.inicio', compact('clientes'));
+        return view('cliente.listado', compact('clientes'));
     }
 
     public function inicio()
     {
-        return view('clientes.formulario');
+        return view('cliente.formulario');
     }
 
     public function guardar(Request $request)
@@ -70,7 +70,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return view('clientes.ver', compact('cliente'));
+        return redirect('/cliente');
     }
 
     public function edit($id)
@@ -81,7 +81,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return view('clientes.editar', compact('cliente'));
+        return redirect('/cliente');
     }
 
     public function update(Request $request, $id)
@@ -143,7 +143,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return view('clientes.eliminar', compact('cliente'));
+        return redirect('/cliente');
     }
 
     public function destroy($id)

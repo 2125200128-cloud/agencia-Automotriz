@@ -31,6 +31,11 @@ class ProveedorController extends Controller
         return view('proveedor.formulario');
     }
 
+    public function inicio()
+    {
+        return $this->formulario();
+    }
+
     public function store(Request $request)
     {
         $datos = $request->validate([
@@ -47,6 +52,42 @@ class ProveedorController extends Controller
             'correo' => $datos['email'],
             'estado' => 'activo',
         ]);
+
+        return redirect('/proveedor');
+    }
+
+    public function guardar(Request $request)
+    {
+        return $this->store($request);
+    }
+
+    public function ver($id)
+    {
+        return redirect('/proveedor');
+    }
+
+    public function edit($id)
+    {
+        return redirect('/proveedor');
+    }
+
+    public function update(Request $request, $id)
+    {
+        return redirect('/proveedor');
+    }
+
+    public function eliminar($id)
+    {
+        return redirect('/proveedor');
+    }
+
+    public function destroy($id)
+    {
+        $proveedor = Proveedor::find($id);
+
+        if ($proveedor) {
+            $proveedor->delete();
+        }
 
         return redirect('/proveedor');
     }
