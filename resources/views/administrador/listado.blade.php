@@ -22,15 +22,15 @@
             </article>
             <article class="rounded-xl border border-white/10 bg-zinc-950 p-5">
                 <p class="text-sm text-gray-400">Activos</p>
-                <p class="mt-2 text-3xl font-black text-green-400">{{ $administradores->where('estado', 'activo')->count() }}</p>
+                <p class="mt-2 text-3xl font-black text-green-400">{{ $administradores->where('estado', 'Activo')->count() }}</p>
             </article>
             <article class="rounded-xl border border-white/10 bg-zinc-950 p-5">
                 <p class="text-sm text-gray-400">Superadmins</p>
-                <p class="mt-2 text-3xl font-black text-red-300">{{ $administradores->where('rol', 'superadministrador')->count() }}</p>
+                <p class="mt-2 text-3xl font-black text-red-300">{{ $administradores->where('rol', 'Superadministrador')->count() }}</p>
             </article>
             <article class="rounded-xl border border-white/10 bg-zinc-950 p-5">
                 <p class="text-sm text-gray-400">Inactivos</p>
-                <p class="mt-2 text-3xl font-black text-red-400">{{ $administradores->where('estado', 'inactivo')->count() }}</p>
+                <p class="mt-2 text-3xl font-black text-red-400">{{ $administradores->where('estado', 'Inactivo')->count() }}</p>
             </article>
         </div>
 
@@ -70,7 +70,6 @@
                 <table class="w-full text-left text-sm text-gray-300">
                     <thead class="bg-black text-xs uppercase tracking-wider text-gray-400">
                         <tr>
-                            <th class="px-6 py-4">Imagen</th>
                             <th class="px-6 py-4">Nombre</th>
                             <th class="px-6 py-4">Usuario</th>
                             <th class="px-6 py-4">Correo</th>
@@ -82,20 +81,16 @@
                     <tbody>
                         @forelse ($administradores as $admin)
                             <tr class="border-t border-white/10 hover:bg-white/5">
-                                <td class="px-6 py-4">@include('plantilla.imagen-tabla', [
-                                    'imagen' => $admin->imagen,
-                                    'alt' => $admin->nombres . ' ' . $admin->apellidos,
-                                ])</td>
                                 <td class="px-6 py-4 font-bold text-white">{{ $admin->nombres }} {{ $admin->apellidos }}</td>
                                 <td class="px-6 py-4">{{ $admin->usuario }}</td>
                                 <td class="px-6 py-4">{{ $admin->correo }}</td>
                                 <td class="px-6 py-4">{{ $admin->rol }}</td>
                                 <td class="px-6 py-4"><span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">{{ $admin->estado }}</span></td>
-                                <td class="px-6 py-4"><div class="flex gap-2"><a href="/administrador/{{ $admin->id }}" class="rounded-lg bg-zinc-800 px-3 py-1 text-xs font-bold text-zinc-200 transition hover:bg-zinc-700">Ver</a><a href="/administrador/{{ $admin->id }}/editar" class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</a><a href="/administrador/{{ $admin->id }}/eliminar" class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</a></div></td>
+                                <td class="px-6 py-4"><div class="flex gap-2"><button class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</button><button class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</button></div></td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-gray-400">No hay administradores registrados.</td>
+                                <td colspan="6" class="px-6 py-10 text-center text-gray-400">No hay administradores registrados.</td>
                             </tr>
                         @endforelse
                     </tbody>

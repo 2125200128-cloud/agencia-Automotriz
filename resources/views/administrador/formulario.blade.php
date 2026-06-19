@@ -16,32 +16,32 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <div>
                         <label for="nombres" class="mb-2 block text-sm font-bold text-white">nombres</label>
-                        <input type="text" id="nombres" name="nombres" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="text" id="nombres" name="nombres" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
                         <label for="apellidos" class="mb-2 block text-sm font-bold text-white">apellidos</label>
-                        <input type="text" id="apellidos" name="apellidos" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="text" id="apellidos" name="apellidos" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
                         <label for="correo" class="mb-2 block text-sm font-bold text-white">correo</label>
-                        <input type="email" id="correo" name="correo" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="text" id="correo" name="correo" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
                         <label for="usuario" class="mb-2 block text-sm font-bold text-white">usuario</label>
-                        <input type="text" id="usuario" name="usuario" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="text" id="usuario" name="usuario" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
                         <label for="contrasena" class="mb-2 block text-sm font-bold text-white">contrasena</label>
-                        <input type="password" id="contrasena" name="contrasena" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="text" id="contrasena" name="contrasena" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
                         <label for="imagen" class="mb-2 block text-sm font-bold text-white">imagen</label>
-                        <input type="file" id="imagen" name="imagen" accept="image/*" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
+                        <input type="file" id="imagen" name="imagen" accept="image/*" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
                     </div>
 
                     <div>
@@ -71,5 +71,6 @@
     </div>
 </section>
 @endsection
+
 
 
