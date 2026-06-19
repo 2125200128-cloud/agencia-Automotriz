@@ -18,7 +18,7 @@ class ProductoController extends Controller
     {
         $productos = Producto::with(['marca', 'modelo', 'tipo', 'color', 'proveedor'])->get();
 
-        return view('productoauto.listado', compact('productos'));
+        return view('productos.inicio', compact('productos'));
     }
 
     public function inicio()
@@ -29,7 +29,7 @@ class ProductoController extends Controller
         $colores = Color::all();
         $proveedores = Proveedor::all();
 
-        return view('productoauto.formulario', compact('marcas', 'modelos', 'tipos', 'colores', 'proveedores'));
+        return view('productos.formulario', compact('marcas', 'modelos', 'tipos', 'colores', 'proveedores'));
     }
 
     public function guardar(Request $request)

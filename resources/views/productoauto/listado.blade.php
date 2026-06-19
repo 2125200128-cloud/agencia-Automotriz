@@ -30,42 +30,85 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
-                        @forelse ($productos as $producto)
-                            <tr class="hover:bg-white/5 transition">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-12 w-20 flex-shrink-0 overflow-hidden rounded bg-zinc-800">
-                                            @include('plantilla.imagen-tabla', [
-                                                'imagen' => $producto->imagen_principal,
-                                                'alt' => $producto->nombre,
-                                            ])
-                                        </div>
-                                        <div>
-                                            <p class="font-bold text-white">{{ $producto->nombre }}</p>
-                                            <p class="mt-0.5 text-xs text-gray-400">VIN: {{ $producto->numero_serie ?? 'Sin serie' }}</p>
-                                        </div>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-16 rounded overflow-hidden bg-zinc-800 flex-shrink-0">
                                     </div>
-                                </td>
-                                <td class="px-6 py-4">{{ $producto->proveedor->nombre ?? 'Sin proveedor' }}</td>
-                                <td class="px-6 py-4">{{ $producto->color->nombre ?? 'Sin color' }}</td>
-                                <td class="px-6 py-4 font-bold text-white">${{ number_format((float) $producto->precio, 2) }}</td>
-                                <td class="px-6 py-4 font-bold">{{ $producto->existencia }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">{{ $producto->estado }}</span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <a href="/producto/{{ $producto->id }}" class="rounded-lg bg-zinc-800 px-3 py-1 text-xs font-bold text-zinc-200 transition hover:bg-zinc-700">Ver</a>
-                                        <a href="/producto/{{ $producto->id }}/editar" class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</a>
-                                        <a href="/producto/{{ $producto->id }}/eliminar" class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</a>
+                                    <div>
+                                        <p class="font-bold text-white">Nissan Skyline GT-R R34</p>
+                                        <p class="text-xs text-gray-400 mt-0.5">VIN: JNR340001</p>
                                     </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-gray-400">No hay productos registrados.</td>
-                            </tr>
-                        @endforelse
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">Tokyo Import Parts</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-blue-600"></span>Bayside Blue
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-bold text-white">$1,850,000</td>
+                            <td class="px-6 py-4 font-bold">1</td>
+                            <td class="px-6 py-4"><span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">En Venta</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</button>
+                                    <button class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-16 rounded overflow-hidden bg-zinc-800 flex-shrink-0"></div>
+                                    <div>
+                                        <p class="font-bold text-white">Toyota Supra MK4</p>
+                                        <p class="text-xs text-gray-400 mt-0.5">VIN: JTA800452</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">Tokyo Import Parts</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-white border border-gray-600"></span>Pearl White
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-bold text-white">$1,420,000</td>
+                            <td class="px-6 py-4 text-red-400 font-bold">0</td>
+                            <td class="px-6 py-4"><span class="rounded-full bg-red-500/15 px-3 py-1 text-xs font-bold text-red-300">Agotado</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</button>
+                                    <button class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-16 rounded overflow-hidden bg-zinc-800 flex-shrink-0"></div>
+                                    <div>
+                                        <p class="font-bold text-white">Mazda RX-7 FD</p>
+                                        <p class="text-xs text-gray-400 mt-0.5">VIN: JMFD3S099</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">Elite Detail MX</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-red-600"></span>Candy Red
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-bold text-white">$980,000</td>
+                            <td class="px-6 py-4 font-bold">2</td>
+                            <td class="px-6 py-4"><span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">En Venta</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button class="rounded-lg bg-blue-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-blue-500">Editar</button>
+                                    <button class="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-500">Eliminar</button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

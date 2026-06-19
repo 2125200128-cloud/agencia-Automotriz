@@ -15,12 +15,12 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-        return view('cliente.listado', compact('clientes'));
+        return view('clientes.inicio', compact('clientes'));
     }
 
     public function inicio()
     {
-        return view('cliente.formulario');
+        return view('clientes.formulario');
     }
 
     public function guardar(Request $request)

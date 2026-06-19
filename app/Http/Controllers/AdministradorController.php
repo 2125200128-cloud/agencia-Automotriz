@@ -14,12 +14,12 @@ class AdministradorController extends Controller
     {
         $administradores = Administrador::all();
 
-        return view('administrador.listado', compact('administradores'));
+        return view('administradores.inicio', compact('administradores'));
     }
 
     public function inicio()
     {
-        return view('administrador.formulario');
+        return view('administradores.formulario');
     }
 
     public function guardar(Request $request)
