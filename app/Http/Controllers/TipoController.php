@@ -32,11 +32,6 @@ class TipoController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombre' => ['required', 'string', 'max:255'],
-            'imagen' => ['required', 'image', 'max:2048'],
-        ]);
-
         $tipo = new Tipo;
         $tipo->nombre = $request->input('nombre');
 

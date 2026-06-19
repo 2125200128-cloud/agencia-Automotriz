@@ -15,6 +15,10 @@
                 <div class="mt-6 rounded-xl border border-red-500/40 bg-red-950/30 p-4 font-bold text-red-200">
                     {{ session('success') }}</div>
             @endif
+            @if (session('error'))
+                <div class="mt-6 rounded-xl border border-red-500/40 bg-red-950/30 p-4 font-bold text-red-200">
+                    {{ session('error') }}</div>
+            @endif
             <div class="vm-table-card">
                 <div class="overflow-x-auto">
                     <table class="vm-table">

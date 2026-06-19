@@ -14,12 +14,8 @@
                     @method('PUT')
                     <div><label class="vm-input-label" for="nombre">Nombre</label><input class="vm-input-text"
                             id="nombre" name="nombre" value="{{ old('nombre', $tipo->nombre) }}" required></div>
-                    <div><label for="imagen" class="vm-input-label">Imagen ilustrativa</label>
-                        @include('plantilla.imagen-tabla', [
-                            'imagen' => $tipo->imagen,
-                            'alt' => $tipo->nombre,
-                        ])
-                        <input type="file" id="imagen" name="imagen" accept="image/*" class="vm-input-text">
+                    <div><label for="imagen" class="vm-input-label">Imagen ilustrativa</label><input type="file"
+                            id="imagen" name="imagen" accept="image/*" class="vm-input-text">
                         <p class="mt-2 text-xs text-gray-400">{{ $tipo->imagen ?? 'Sin imagen actual' }}</p>
                     </div>
                     <div class="flex justify-end gap-3 border-t border-gray-200 pt-6"><a href="/tipos"
