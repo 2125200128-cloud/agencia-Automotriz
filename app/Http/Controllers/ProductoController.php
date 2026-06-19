@@ -34,6 +34,15 @@ class ProductoController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'precio' => ['required', 'numeric', 'min:0'],
+            'existencia' => ['required', 'integer', 'min:0'],
+            'imagen_principal' => ['required', 'image', 'max:2048'],
+            'imagen_secundaria' => ['required', 'image', 'max:2048'],
+            'imagen_adicional' => ['required', 'image', 'max:2048'],
+        ]);
+
         $producto = new Producto;
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');

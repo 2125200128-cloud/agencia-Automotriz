@@ -24,6 +24,15 @@ class AdministradorController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombres' => ['required', 'string', 'max:255'],
+            'apellidos' => ['required', 'string', 'max:255'],
+            'correo' => ['required', 'email', 'max:255'],
+            'usuario' => ['required', 'string', 'max:255'],
+            'contrasena' => ['required', 'string', 'min:6'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $administrador = new Administrador;
         $administrador->nombres = $request->input('nombres');
         $administrador->apellidos = $request->input('apellidos');

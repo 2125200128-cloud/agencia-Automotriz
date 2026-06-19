@@ -23,6 +23,11 @@ class ColorController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $color = new Color;
         $color->nombre = $request->input('nombre');
 

@@ -23,6 +23,11 @@ class MarcaController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $marca = new Marca;
         $marca->nombre = $request->input('nombre');
 
