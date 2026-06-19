@@ -26,6 +26,12 @@ class ModeloController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'marca_id' => ['required', 'exists:marcas,id'],
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $modelo = new ModeloVehiculo;
         $modelo->marca_id = $request->input('marca_id');
         $modelo->nombre = $request->input('nombre');

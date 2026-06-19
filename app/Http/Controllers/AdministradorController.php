@@ -14,16 +14,25 @@ class AdministradorController extends Controller
     {
         $administradores = Administrador::all();
 
-        return view('administrador.listado', compact('administradores'));
+        return view('administradores.inicio', compact('administradores'));
     }
 
     public function inicio()
     {
-        return view('administrador.formulario');
+        return view('administradores.formulario');
     }
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombres' => ['required', 'string', 'max:255'],
+            'apellidos' => ['required', 'string', 'max:255'],
+            'correo' => ['required', 'email', 'max:255'],
+            'usuario' => ['required', 'string', 'max:255'],
+            'contrasena' => ['required', 'string', 'min:6'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $administrador = new Administrador;
         $administrador->nombres = $request->input('nombres');
         $administrador->apellidos = $request->input('apellidos');
@@ -59,7 +68,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return redirect('/administrador');
+        return view('administradores.ver', compact('administrador'));
     }
 
     public function edit($id)
@@ -70,7 +79,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return redirect('/administrador');
+        return view('administradores.editar', compact('administrador'));
     }
 
     public function update(Request $request, $id)
@@ -132,7 +141,7 @@ class AdministradorController extends Controller
             abort(404);
         }
 
-        return redirect('/administrador');
+        return view('administradores.eliminar', compact('administrador'));
     }
 
     public function destroy($id)

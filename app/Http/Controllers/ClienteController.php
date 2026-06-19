@@ -15,16 +15,26 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-        return view('cliente.listado', compact('clientes'));
+        return view('clientes.inicio', compact('clientes'));
     }
 
     public function inicio()
     {
-        return view('cliente.formulario');
+        return view('clientes.formulario');
     }
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombres' => ['nullable', 'string', 'max:255'],
+            'apellidos' => ['nullable', 'string', 'max:255'],
+            'nombre' => ['nullable', 'string', 'max:255'],
+            'correo' => ['nullable', 'email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'imagen' => ['required_without:foto', 'image', 'max:2048'],
+            'foto' => ['required_without:imagen', 'image', 'max:2048'],
+        ]);
+
         $nombres = $request->input('nombres');
         $apellidos = $request->input('apellidos');
 
@@ -70,7 +80,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return redirect('/cliente');
+        return view('clientes.ver', compact('cliente'));
     }
 
     public function edit($id)
@@ -81,7 +91,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return redirect('/cliente');
+        return view('clientes.editar', compact('cliente'));
     }
 
     public function update(Request $request, $id)
@@ -143,7 +153,7 @@ class ClienteController extends Controller
             abort(404);
         }
 
-        return redirect('/cliente');
+        return view('clientes.eliminar', compact('cliente'));
     }
 
     public function destroy($id)

@@ -18,7 +18,7 @@ class ProductoController extends Controller
     {
         $productos = Producto::with(['marca', 'modelo', 'tipo', 'color', 'proveedor'])->get();
 
-        return view('productoauto.listado', compact('productos'));
+        return view('productos.inicio', compact('productos'));
     }
 
     public function inicio()
@@ -29,11 +29,20 @@ class ProductoController extends Controller
         $colores = Color::all();
         $proveedores = Proveedor::all();
 
-        return view('productoauto.formulario', compact('marcas', 'modelos', 'tipos', 'colores', 'proveedores'));
+        return view('productos.formulario', compact('marcas', 'modelos', 'tipos', 'colores', 'proveedores'));
     }
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'precio' => ['required', 'numeric', 'min:0'],
+            'existencia' => ['required', 'integer', 'min:0'],
+            'imagen_principal' => ['required', 'image', 'max:2048'],
+            'imagen_secundaria' => ['required', 'image', 'max:2048'],
+            'imagen_adicional' => ['required', 'image', 'max:2048'],
+        ]);
+
         $producto = new Producto;
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
@@ -89,7 +98,7 @@ class ProductoController extends Controller
             abort(404);
         }
 
-        return redirect('/producto');
+        return view('productos.ver', compact('producto'));
     }
 
     public function edit($id)
@@ -106,7 +115,7 @@ class ProductoController extends Controller
         $colores = Color::all();
         $proveedores = Proveedor::all();
 
-        return redirect('/producto');
+        return view('productos.editar', compact('producto', 'marcas', 'modelos', 'tipos', 'colores', 'proveedores'));
     }
 
     public function update(Request $request, $id)
@@ -194,7 +203,7 @@ class ProductoController extends Controller
             abort(404);
         }
 
-        return redirect('/producto');
+        return view('productos.eliminar', compact('producto'));
     }
 
     public function destroy($id)

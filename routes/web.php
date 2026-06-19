@@ -30,9 +30,9 @@ Route::delete('/administrador/{id}', [AdministradorController::class, 'destroy']
 Route::get('/cliente', [ClienteController::class, 'listado']);
 Route::get('/cliente/formulario', [ClienteController::class, 'inicio']);
 Route::post('/cliente', [ClienteController::class, 'guardar']);
-Route::view('/cliente/cita', 'cliente.cita');
-Route::view('/cliente/compra', 'cliente.compra');
-Route::view('/cliente/mis-pedidos', 'cliente.mis-pedidos');
+Route::view('/cliente/cita', 'clientes.cita');
+Route::view('/cliente/compra', 'clientes.compra');
+Route::view('/cliente/mis-pedidos', 'clientes.mis-pedidos');
 Route::get('/cliente/{id}', [ClienteController::class, 'ver']);
 Route::get('/cliente/{id}/editar', [ClienteController::class, 'edit']);
 Route::put('/cliente/{id}', [ClienteController::class, 'update']);
@@ -65,6 +65,7 @@ Route::get('/pagos', [PagoController::class, 'listado']);
 Route::get('/pagos/formulario', [PagoController::class, 'inicio']);
 Route::post('/pagos', [PagoController::class, 'guardar']);
 
+Route::view('/catalogos', 'catalogos.inicio');
 Route::get('/marcas', [MarcaController::class, 'listado']);
 Route::get('/marcas/formulario', [MarcaController::class, 'inicio']);
 Route::post('/marcas', [MarcaController::class, 'guardar']);

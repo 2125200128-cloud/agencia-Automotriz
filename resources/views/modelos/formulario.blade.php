@@ -16,7 +16,7 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <div>
                         <label for="marca_id" class="mb-2 block text-sm font-bold text-white">marca_id</label>
-                        <select id="marca_id" name="marca_id" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                        <select id="marca_id" name="marca_id" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
                             <option value="" selected>Selecciona una marca</option>
                             @foreach($marcas ?? [] as $marca)
                                 <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
@@ -26,12 +26,12 @@
 
                     <div>
                         <label for="nombre" class="mb-2 block text-sm font-bold text-white">nombre</label>
-                        <input type="text" id="nombre" name="nombre" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                        <input type="text" id="nombre" name="nombre" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
                     </div>
 
                     <div class="md:col-span-2">
                         <label for="imagen" class="mb-2 block text-sm font-bold text-white">imagen</label>
-                        <input type="file" id="imagen" name="imagen" accept="image/*" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30">
+                        <input type="file" id="imagen" name="imagen" accept="image/*" class="block w-full rounded-xl border border-white/10 bg-black/80 p-3 text-white focus:border-white/30 focus:ring-white/30" required>
                     </div>
                 </div>
 
@@ -44,6 +44,4 @@
     </div>
 </section>
 @endsection
-
-
 
