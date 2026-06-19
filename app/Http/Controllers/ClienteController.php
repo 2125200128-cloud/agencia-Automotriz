@@ -25,16 +25,6 @@ class ClienteController extends Controller
 
     public function guardar(Request $request)
     {
-        $request->validate([
-            'nombres' => ['nullable', 'string', 'max:255'],
-            'apellidos' => ['nullable', 'string', 'max:255'],
-            'nombre' => ['nullable', 'string', 'max:255'],
-            'correo' => ['nullable', 'email', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'imagen' => ['required_without:foto', 'image', 'max:2048'],
-            'foto' => ['required_without:imagen', 'image', 'max:2048'],
-        ]);
-
         $nombres = $request->input('nombres');
         $apellidos = $request->input('apellidos');
 
