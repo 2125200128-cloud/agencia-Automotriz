@@ -37,7 +37,7 @@
                                 <td class="vm-table-td font-bold text-black">{{ $administrador->nombres }} {{ $administrador->apellidos }}</td>
                                 <td class="vm-table-td">{{ $administrador->usuario }}</td>
                                 <td class="vm-table-td">{{ $administrador->correo }}</td>
-                                <td class="vm-table-td">{{ $administrador->rol }}</td>
+                                <td class="vm-table-td">{{ $administrador->rolVisible() }}</td>
                                 <td class="vm-table-td"><span class="rounded-full border border-red-500/50 px-3 py-1 text-xs font-bold text-red-200">{{ $administrador->estado }}</span></td>
                                 <td class="vm-table-td text-right">
                                     <div class="flex justify-end gap-2">

@@ -25,9 +25,23 @@
                     <div><label class="vm-input-label" for="correo">Correo</label><input class="vm-input-text" type="email" id="correo" name="correo" value="{{ old('correo', $administrador->correo) }}" required></div>
                     <div><label class="vm-input-label" for="usuario">Usuario</label><input class="vm-input-text" id="usuario" name="usuario" value="{{ old('usuario', $administrador->usuario) }}" required></div>
                     <div><label class="vm-input-label" for="contrasena">Nueva contrasena</label><input class="vm-input-text" type="password" id="contrasena" name="contrasena"></div>
-                    <div><label class="vm-input-label" for="imagen">Imagen</label><input class="vm-input-text" type="file" id="imagen" name="imagen" accept="image/*"></div>
-                    <div><label class="vm-input-label" for="rol">Rol</label><input class="vm-input-text" id="rol" name="rol" value="{{ old('rol', $administrador->rol) }}" required></div>
-                    <div><label class="vm-input-label" for="estado">Estado</label><input class="vm-input-text" id="estado" name="estado" value="{{ old('estado', $administrador->estado) }}" required></div>
+                    <div><label class="vm-input-label" for="imagen">Imagen</label>@include('plantilla.imagen-tabla', ['imagen' => $administrador->imagen, 'alt' => $administrador->nombres])<input class="vm-input-text mt-3" type="file" id="imagen" name="imagen" accept="image/*"></div>
+                    <div>
+                        <label class="vm-input-label" for="rol">Rol</label>
+                        <select class="vm-input-text" id="rol" name="rol" required>
+                            @foreach ($roles as $valor => $etiqueta)
+                                <option value="{{ $valor }}" @selected(old('rol', $administrador->rolNormalizado()) === $valor)>{{ $etiqueta }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="vm-input-label" for="estado">Estado</label>
+                        <select class="vm-input-text" id="estado" name="estado" required>
+                            @foreach ($estados as $valor => $etiqueta)
+                                <option value="{{ $valor }}" @selected(old('estado', $administrador->estado) === $valor)>{{ $etiqueta }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="flex justify-end gap-3 border-t border-gray-200 pt-6">
                     <a href="/administrador" class="vm-btn-secondary">Cancelar</a>

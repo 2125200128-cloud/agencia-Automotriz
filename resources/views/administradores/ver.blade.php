@@ -12,9 +12,9 @@
             <p><strong>ID:</strong> {{ $administrador->id }}</p>
             <p><strong>Correo:</strong> {{ $administrador->correo }}</p>
             <p><strong>Usuario:</strong> {{ $administrador->usuario }}</p>
-            <p><strong>Rol:</strong> {{ $administrador->rol }}</p>
+            <p><strong>Rol:</strong> {{ $administrador->rolVisible() }}</p>
             <p><strong>Estado:</strong> {{ $administrador->estado }}</p>
-            <p><strong>Imagen:</strong> {{ $administrador->imagen ?? 'Sin imagen' }}</p>
+            <div><strong>Imagen:</strong><div class="mt-2">@include('plantilla.imagen-tabla', ['imagen' => $administrador->imagen, 'alt' => $administrador->nombres])</div></div>
             <div class="flex gap-3 pt-4"><a href="/administrador" class="vm-btn-secondary">Volver</a><a href="/administrador/{{ $administrador->id }}/editar" class="vm-btn-primary">Editar</a></div>
         </div>
     </div>

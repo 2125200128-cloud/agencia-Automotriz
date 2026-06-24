@@ -13,84 +13,103 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\TipoController;
 use App\Http\Controllers\ProductoPedidoController;
 use App\Http\Controllers\InicioController;
+use App\Http\Controllers\LoginController;
 
-Route::get('/', [InicioController::class, 'inicio']);
+Route::get('/', fn () => redirect('/login'));
+Route::get('/login', [LoginController::class, 'show'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
 
-Route::get('/administrador', [AdministradorController::class, 'listado']);
-Route::get('/administrador/formulario', [AdministradorController::class, 'inicio']);
-Route::post('/administrador', [AdministradorController::class, 'guardar']);
-Route::get('/administrador/{id}', [AdministradorController::class, 'ver']);
-Route::get('/administrador/{id}/editar', [AdministradorController::class, 'edit']);
-Route::put('/administrador/{id}', [AdministradorController::class, 'update']);
-Route::get('/administrador/{id}/eliminar', [AdministradorController::class, 'eliminar']);
-Route::delete('/administrador/{id}', [AdministradorController::class, 'destroy']);
-
-Route::get('/cliente', [ClienteController::class, 'listado']);
-Route::get('/cliente/formulario', [ClienteController::class, 'inicio']);
+Route::get('/cliente/cita', [ClienteController::class, 'citaFormulario'])->name('cliente.cita');
+Route::post('/cliente/cita', [ClienteController::class, 'guardarCita'])->name('cliente.cita.guardar');
+Route::post('/cliente/cita/validar', [ClienteController::class, 'validarLicencia']);
 Route::post('/cliente', [ClienteController::class, 'guardar']);
-Route::view('/cliente/cita', 'clientes.cita');
-Route::view('/cliente/compra', 'clientes.compra');
 Route::view('/cliente/mis-pedidos', 'clientes.mis-pedidos');
-Route::get('/cliente/{id}', [ClienteController::class, 'ver']);
-Route::get('/cliente/{id}/editar', [ClienteController::class, 'edit']);
-Route::put('/cliente/{id}', [ClienteController::class, 'update']);
-Route::get('/cliente/{id}/eliminar', [ClienteController::class, 'eliminar']);
-Route::delete('/cliente/{id}', [ClienteController::class, 'destroy']);
 
-Route::get('/pedido', [PedidoController::class, 'listado']);
-Route::get('/pedido/formulario', [PedidoController::class, 'inicio']);
-Route::post('/pedido', [PedidoController::class, 'guardar']);
+Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
+    Route::get('/dashboard', [InicioController::class, 'inicio'])->name('dashboard');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/producto', [ProductoController::class, 'listado']);
-Route::get('/producto/formulario', [ProductoController::class, 'inicio']);
-Route::post('/producto', [ProductoController::class, 'guardar']);
-Route::get('/producto/{id}', [ProductoController::class, 'ver']);
-Route::get('/producto/{id}/editar', [ProductoController::class, 'edit']);
-Route::put('/producto/{id}', [ProductoController::class, 'update']);
-Route::get('/producto/{id}/eliminar', [ProductoController::class, 'eliminar']);
-Route::delete('/producto/{id}', [ProductoController::class, 'destroy']);
+    Route::get('/administrador/citas', [AdministradorController::class, 'citas'])->middleware('permiso.admin:citas')->name('administrador.citas');
 
-Route::get('/proveedor', [ProveedorController::class, 'listado']);
-Route::get('/proveedor/formulario', [ProveedorController::class, 'inicio']);
-Route::post('/proveedor', [ProveedorController::class, 'guardar']);
-Route::get('/proveedor/{id}', [ProveedorController::class, 'ver']);
-Route::get('/proveedor/{id}/editar', [ProveedorController::class, 'edit']);
-Route::put('/proveedor/{id}', [ProveedorController::class, 'update']);
-Route::get('/proveedor/{id}/eliminar', [ProveedorController::class, 'eliminar']);
-Route::delete('/proveedor/{id}', [ProveedorController::class, 'destroy']);
+    Route::middleware('permiso.admin:administracion')->group(function () {
+        Route::get('/administrador', [AdministradorController::class, 'listado']);
+        Route::get('/administrador/formulario', [AdministradorController::class, 'inicio']);
+        Route::post('/administrador', [AdministradorController::class, 'guardar']);
+        Route::get('/administrador/valuador', [AdministradorController::class, 'valuador'])->name('administrador.valuador');
+        Route::get('/administrador/{id}', [AdministradorController::class, 'ver']);
+        Route::get('/administrador/{id}/editar', [AdministradorController::class, 'edit']);
+        Route::put('/administrador/{id}', [AdministradorController::class, 'update']);
+        Route::get('/administrador/{id}/eliminar', [AdministradorController::class, 'eliminar']);
+        Route::delete('/administrador/{id}', [AdministradorController::class, 'destroy']);
 
-Route::get('/pagos', [PagoController::class, 'listado']);
-Route::get('/pagos/formulario', [PagoController::class, 'inicio']);
-Route::post('/pagos', [PagoController::class, 'guardar']);
+        Route::get('/cliente', [ClienteController::class, 'listado']);
+        Route::get('/cliente/formulario', [ClienteController::class, 'inicio']);
+        Route::get('/cliente/{id}', [ClienteController::class, 'ver']);
+        Route::get('/cliente/{id}/editar', [ClienteController::class, 'edit']);
+        Route::put('/cliente/{id}', [ClienteController::class, 'update']);
+        Route::get('/cliente/{id}/eliminar', [ClienteController::class, 'eliminar']);
+        Route::delete('/cliente/{id}', [ClienteController::class, 'destroy']);
 
-Route::view('/catalogos', 'catalogos.inicio');
-Route::get('/marcas', [MarcaController::class, 'listado']);
-Route::get('/marcas/formulario', [MarcaController::class, 'inicio']);
-Route::post('/marcas', [MarcaController::class, 'guardar']);
-Route::get('/marcas/{id}', [MarcaController::class, 'ver']);
-Route::get('/marcas/{id}/editar', [MarcaController::class, 'edit']);
-Route::put('/marcas/{id}', [MarcaController::class, 'update']);
-Route::get('/marcas/{id}/eliminar', [MarcaController::class, 'eliminar']);
-Route::delete('/marcas/{id}', [MarcaController::class, 'destroy']);
-Route::get('/modelos', [ModeloController::class, 'listado']);
-Route::get('/modelos/formulario', [ModeloController::class, 'inicio']);
-Route::post('/modelos', [ModeloController::class, 'guardar']);
-Route::get('/modelos/{id}', [ModeloController::class, 'ver']);
-Route::get('/modelos/{id}/editar', [ModeloController::class, 'edit']);
-Route::put('/modelos/{id}', [ModeloController::class, 'update']);
-Route::get('/modelos/{id}/eliminar', [ModeloController::class, 'eliminar']);
-Route::delete('/modelos/{id}', [ModeloController::class, 'destroy']);
-Route::get('/colores', [ColorController::class, 'listado']);
-Route::get('/colores/formulario', [ColorController::class, 'inicio']);
-Route::post('/colores', [ColorController::class, 'guardar']);
-Route::get('/colores/{id}', [ColorController::class, 'ver']);
-Route::get('/colores/{id}/editar', [ColorController::class, 'edit']);
-Route::put('/colores/{id}', [ColorController::class, 'update']);
-Route::get('/colores/{id}/eliminar', [ColorController::class, 'eliminar']);
-Route::delete('/colores/{id}', [ColorController::class, 'destroy']);
-Route::get('/tipos', [TipoController::class, 'listado']);
-Route::get('/tipos/formulario', [TipoController::class, 'inicio']);
-Route::post('/tipos', [TipoController::class, 'guardar']);
-Route::get('/productos-pedido', [ProductoPedidoController::class, 'listado']);
-Route::get('/productos-pedido/formulario', [ProductoPedidoController::class, 'inicio']);
-Route::post('/productos-pedido', [ProductoPedidoController::class, 'guardar']);
+        Route::get('/proveedor', [ProveedorController::class, 'listado']);
+        Route::get('/proveedor/formulario', [ProveedorController::class, 'inicio']);
+        Route::post('/proveedor', [ProveedorController::class, 'guardar']);
+        Route::get('/proveedor/{id}', [ProveedorController::class, 'ver']);
+        Route::get('/proveedor/{id}/editar', [ProveedorController::class, 'edit']);
+        Route::put('/proveedor/{id}', [ProveedorController::class, 'update']);
+        Route::get('/proveedor/{id}/eliminar', [ProveedorController::class, 'eliminar']);
+        Route::delete('/proveedor/{id}', [ProveedorController::class, 'destroy']);
+    });
+
+    Route::get('/pedido', [PedidoController::class, 'listado'])->middleware('permiso.admin:ventas');
+    Route::get('/pedido/formulario', [PedidoController::class, 'inicio'])->middleware('permiso.admin:ventas,ventas_registro');
+    Route::post('/pedido', [PedidoController::class, 'guardar'])->middleware('permiso.admin:ventas,ventas_registro');
+
+    Route::get('/producto', [ProductoController::class, 'listado'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/formulario', [ProductoController::class, 'inicio'])->middleware('permiso.admin:inventario');
+    Route::post('/producto', [ProductoController::class, 'guardar'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/{id}', [ProductoController::class, 'ver'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/{id}/editar', [ProductoController::class, 'edit'])->middleware('permiso.admin:inventario');
+    Route::put('/producto/{id}', [ProductoController::class, 'update'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/{id}/eliminar', [ProductoController::class, 'eliminar'])->middleware('permiso.admin:inventario');
+    Route::delete('/producto/{id}', [ProductoController::class, 'destroy'])->middleware('permiso.admin:inventario');
+
+    Route::get('/pagos', [PagoController::class, 'listado'])->middleware('permiso.admin:pagos');
+    Route::get('/pagos/formulario', [PagoController::class, 'inicio'])->middleware('permiso.admin:pagos');
+    Route::post('/pagos', [PagoController::class, 'guardar'])->middleware('permiso.admin:pagos');
+
+    Route::view('/catalogos', 'catalogos.inicio')->middleware('permiso.admin:catalogos');
+    Route::get('/marcas', [MarcaController::class, 'listado'])->middleware('permiso.admin:catalogos');
+    Route::get('/marcas/formulario', [MarcaController::class, 'inicio'])->middleware('permiso.admin:catalogos');
+    Route::post('/marcas', [MarcaController::class, 'guardar'])->middleware('permiso.admin:catalogos');
+    Route::get('/marcas/{id}', [MarcaController::class, 'ver'])->middleware('permiso.admin:catalogos');
+    Route::get('/marcas/{id}/editar', [MarcaController::class, 'edit'])->middleware('permiso.admin:catalogos');
+    Route::put('/marcas/{id}', [MarcaController::class, 'update'])->middleware('permiso.admin:catalogos');
+    Route::get('/marcas/{id}/eliminar', [MarcaController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
+    Route::delete('/marcas/{id}', [MarcaController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+
+    Route::get('/modelos', [ModeloController::class, 'listado'])->middleware('permiso.admin:catalogos');
+    Route::get('/modelos/formulario', [ModeloController::class, 'inicio'])->middleware('permiso.admin:catalogos');
+    Route::post('/modelos', [ModeloController::class, 'guardar'])->middleware('permiso.admin:catalogos');
+    Route::get('/modelos/{id}', [ModeloController::class, 'ver'])->middleware('permiso.admin:catalogos');
+    Route::get('/modelos/{id}/editar', [ModeloController::class, 'edit'])->middleware('permiso.admin:catalogos');
+    Route::put('/modelos/{id}', [ModeloController::class, 'update'])->middleware('permiso.admin:catalogos');
+    Route::get('/modelos/{id}/eliminar', [ModeloController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
+    Route::delete('/modelos/{id}', [ModeloController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+
+    Route::get('/colores', [ColorController::class, 'listado'])->middleware('permiso.admin:catalogos');
+    Route::get('/colores/formulario', [ColorController::class, 'inicio'])->middleware('permiso.admin:catalogos');
+    Route::post('/colores', [ColorController::class, 'guardar'])->middleware('permiso.admin:catalogos');
+    Route::get('/colores/{id}', [ColorController::class, 'ver'])->middleware('permiso.admin:catalogos');
+    Route::get('/colores/{id}/editar', [ColorController::class, 'edit'])->middleware('permiso.admin:catalogos');
+    Route::put('/colores/{id}', [ColorController::class, 'update'])->middleware('permiso.admin:catalogos');
+    Route::get('/colores/{id}/eliminar', [ColorController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
+    Route::delete('/colores/{id}', [ColorController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+
+    Route::get('/tipos', [TipoController::class, 'listado'])->middleware('permiso.admin:catalogos');
+    Route::get('/tipos/formulario', [TipoController::class, 'inicio'])->middleware('permiso.admin:catalogos');
+    Route::post('/tipos', [TipoController::class, 'guardar'])->middleware('permiso.admin:catalogos');
+
+    Route::get('/productos-pedido', [ProductoPedidoController::class, 'listado'])->middleware('permiso.admin:ventas');
+    Route::get('/productos-pedido/formulario', [ProductoPedidoController::class, 'inicio'])->middleware('permiso.admin:ventas,ventas_registro');
+    Route::post('/productos-pedido', [ProductoPedidoController::class, 'guardar'])->middleware('permiso.admin:ventas,ventas_registro');
+});

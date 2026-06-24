@@ -19,94 +19,133 @@
     $proveedoresActive = request()->routeIs('proveedores.*', 'proveedor.*', 'proveedores', 'proveedor') || request()->is('proveedor', 'proveedor/*', 'proveedores', 'proveedores/*');
     $catalogosActive = request()->routeIs('catalogos.*', 'catalogos', 'marcas.*', 'modelos.*', 'colores.*', 'tipos.*') || request()->is('catalogos', 'catalogos/*', 'marcas', 'marcas/*', 'modelos', 'modelos/*', 'colores', 'colores/*', 'tipos', 'tipos/*');
     $adminActive = request()->routeIs('administradores.*', 'administrador.*', 'administradores', 'administrador') || request()->is('administrador', 'administrador/*', 'administradores', 'administradores/*');
+    $admin = Auth::guard('admin')->user();
+    $puedeInventario = $admin?->puede('inventario') ?? false;
+    $puedeCatalogos = $admin?->puede('catalogos') ?? false;
+    $puedeVentas = $admin?->puede('ventas') ?? false;
+    $puedeRegistrarVentas = $admin?->puede('ventas_registro') ?? false;
+    $puedePagos = $admin?->puede('pagos') ?? false;
+    $puedeCitas = $admin?->puede('citas') ?? false;
+    $puedeAdministracion = $admin?->puede('administracion') ?? false;
 @endphp
 <nav class="vm-navbar">
     <div class="vm-navbar-container">
-        <a href="/" class="flex items-center gap-3">
+        <a href="{{ url('/dashboard') }}" class="flex items-center gap-3">
             <span class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[#2f3d4f] bg-[#0f141b] shadow-[0_0_18px_rgba(28,105,212,0.18)]">
-                <img src="{{ asset('imagenes/logoVeloceMotors.png') }}" alt="Logo Veloce Motors" class="h-full w-full object-cover">
+                <img src="{{ asset('imagenes/logovelocemotor.png') }}" alt="Logo Veloce Motors" class="h-full w-full object-cover">
             </span>
             <span>
                 <span class="block text-xl font-semibold tracking-tight text-[#f8fafc]">Veloce Motors</span>
             </span>
         </a>
         <div class="flex flex-wrap items-center gap-1 text-sm font-medium">
-            <a href="/" class="{{ $navLinkClass($inicioActive) }}">Iniciar sesion</a>
-            <div class="group relative">
-                <a href="/producto" class="{{ $navLinkClass($productosActive) }}">
-                    Productos
-                </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/producto" class="{{ $dropdownLinkClass(request()->is('producto')) }}">Ver Catalogo</a>
-                        <a href="/producto/formulario" class="{{ $dropdownLinkClass(request()->is('producto/formulario')) }}">+ Agregar Producto</a>
+            <a href="{{ url('/dashboard') }}" class="{{ $navLinkClass($inicioActive) }}">Dashboard</a>
+            @if ($puedeInventario)
+                <div class="group relative">
+                    <a href="/producto" class="{{ $navLinkClass($productosActive) }}">
+                        Inventario
+                    </a>
+                    <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            <a href="/producto" class="{{ $dropdownLinkClass(request()->is('producto')) }}">Ver inventario</a>
+                            <a href="/producto/formulario" class="{{ $dropdownLinkClass(request()->is('producto/formulario')) }}">+ Nuevo vehiculo</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="group relative">
-                <a href="/cliente" class="{{ $navLinkClass($clientesActive) }}">
-                    Clientes
-                </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/cliente" class="{{ $dropdownLinkClass(request()->is('cliente')) }}">Ver Clientes</a>
-                        <a href="/cliente/formulario" class="{{ $dropdownLinkClass(request()->is('cliente/formulario')) }}">+ Nuevo Cliente</a>
+            @endif
+            @if ($puedeAdministracion)
+                <div class="group relative">
+                    <a href="/cliente" class="{{ $navLinkClass($clientesActive) }}">
+                        Usuarios
+                    </a>
+                    <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            <a href="/cliente" class="{{ $dropdownLinkClass(request()->is('cliente')) }}">Ver usuarios</a>
+                            <a href="/cliente/formulario" class="{{ $dropdownLinkClass(request()->is('cliente/formulario')) }}">+ Nuevo usuario</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="group relative">
-                <a href="/pedido" class="{{ $navLinkClass($pedidosActive) }}">
-                    Pedidos
-                </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/pedido" class="{{ $dropdownLinkClass(request()->is('pedido')) }}">Historial de Pedidos</a>
-                        <a href="/productos-pedido" class="{{ $dropdownLinkClass(request()->is('productos-pedido')) }}">Productos por Pedido</a>
-                        <a href="/productos-pedido/formulario" class="{{ $dropdownLinkClass(request()->is('productos-pedido/formulario')) }}">+ Agregar Producto</a>
+            @endif
+            @if ($puedeVentas || $puedeRegistrarVentas)
+                <div class="group relative">
+                    <a href="{{ $puedeVentas ? '/pedido' : '/pedido/formulario' }}" class="{{ $navLinkClass($pedidosActive) }}">
+                        Ventas
+                    </a>
+                    <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            @if ($puedeVentas)
+                                <a href="/pedido" class="{{ $dropdownLinkClass(request()->is('pedido')) }}">Historial de ventas</a>
+                                <a href="/productos-pedido" class="{{ $dropdownLinkClass(request()->is('productos-pedido')) }}">Detalle de ventas</a>
+                            @endif
+                            @if ($puedeRegistrarVentas)
+                                <a href="/pedido/formulario" class="{{ $dropdownLinkClass(request()->is('pedido/formulario')) }}">+ Registrar venta</a>
+                                <a href="/productos-pedido/formulario" class="{{ $dropdownLinkClass(request()->is('productos-pedido/formulario')) }}">+ Agregar detalle</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-            <a href="/pagos" class="{{ $navLinkClass($pagosActive) }}">Pagos</a>
-            <div class="group relative">
-                <a href="/proveedor" class="{{ $navLinkClass($proveedoresActive) }}">
-                    Proveedores
-                </a>
-                <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/proveedor" class="{{ $dropdownLinkClass(request()->is('proveedor')) }}">Ver Proveedores</a>
-                        <a href="/proveedor/formulario" class="{{ $dropdownLinkClass(request()->is('proveedor/formulario')) }}">+ Anadir Proveedor</a>
+            @endif
+            @if ($puedePagos)
+                <a href="/pagos" class="{{ $navLinkClass($pagosActive) }}">Cobros</a>
+            @endif
+            @if ($puedeCitas)
+                <a href="{{ url('/administrador/citas') }}" class="{{ $navLinkClass(request()->is('administrador/citas')) }}">Agenda de pruebas</a>
+            @endif
+            @if ($puedeAdministracion)
+                <a href="{{ url('/administrador/valuador') }}" class="{{ $navLinkClass(request()->is('administrador/valuador')) }}">Valuador</a>
+                <div class="group relative">
+                    <a href="/proveedor" class="{{ $navLinkClass($proveedoresActive) }}">
+                        Socios
+                    </a>
+                    <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            <a href="/proveedor" class="{{ $dropdownLinkClass(request()->is('proveedor')) }}">Ver socios</a>
+                            <a href="/proveedor/formulario" class="{{ $dropdownLinkClass(request()->is('proveedor/formulario')) }}">+ Nuevo socio</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="group relative">
-                <a href="/catalogos" class="{{ $navLinkClass($catalogosActive) }}">
-                    Catalogos
-                </a>
-                <div class="absolute left-0 top-full z-50 hidden w-64 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/catalogos" class="{{ $dropdownLinkClass(request()->is('catalogos')) }}">Ver todos los catalogos</a>
-                        <a href="/marcas" class="{{ $dropdownLinkClass(request()->is('marcas')) }}">Marcas</a>
-                        <a href="/marcas/formulario" class="{{ $dropdownLinkClass(request()->is('marcas/formulario')) }}">+ Agregar marca</a>
-                        <a href="/modelos" class="{{ $dropdownLinkClass(request()->is('modelos')) }}">Modelos</a>
-                        <a href="/modelos/formulario" class="{{ $dropdownLinkClass(request()->is('modelos/formulario')) }}">+ Agregar modelo</a>
-                        <a href="/colores" class="{{ $dropdownLinkClass(request()->is('colores')) }}">Colores</a>
-                        <a href="/colores/formulario" class="{{ $dropdownLinkClass(request()->is('colores/formulario')) }}">+ Agregar color</a>
-                        <a href="/tipos" class="{{ $dropdownLinkClass(request()->is('tipos')) }}">Tipos</a>
-                        <a href="/tipos/formulario" class="{{ $dropdownLinkClass(request()->is('tipos/formulario')) }}">+ Agregar tipo</a>
+            @endif
+            @if ($puedeCatalogos)
+                <div class="group relative">
+                    <a href="/catalogos" class="{{ $navLinkClass($catalogosActive) }}">
+                        Catalogos
+                    </a>
+                    <div class="absolute left-0 top-full z-50 hidden w-64 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            <a href="/catalogos" class="{{ $dropdownLinkClass(request()->is('catalogos')) }}">Panel de catalogos</a>
+                            <a href="/marcas" class="{{ $dropdownLinkClass(request()->is('marcas')) }}">Marcas</a>
+                            <a href="/marcas/formulario" class="{{ $dropdownLinkClass(request()->is('marcas/formulario')) }}">+ Agregar marca</a>
+                            <a href="/modelos" class="{{ $dropdownLinkClass(request()->is('modelos')) }}">Modelos</a>
+                            <a href="/modelos/formulario" class="{{ $dropdownLinkClass(request()->is('modelos/formulario')) }}">+ Agregar modelo</a>
+                            <a href="/colores" class="{{ $dropdownLinkClass(request()->is('colores')) }}">Colores</a>
+                            <a href="/colores/formulario" class="{{ $dropdownLinkClass(request()->is('colores/formulario')) }}">+ Agregar color</a>
+                            <a href="/tipos" class="{{ $dropdownLinkClass(request()->is('tipos')) }}">Tipos</a>
+                            <a href="/tipos/formulario" class="{{ $dropdownLinkClass(request()->is('tipos/formulario')) }}">+ Agregar tipo</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="group relative">
-                <a href="/administrador" class="{{ $navLinkClass($adminActive) }}">
-                    Admin
-                </a>
-                <div class="absolute right-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
-                    <div class="vm-dropdown-menu">
-                        <a href="/administrador" class="{{ $dropdownLinkClass(request()->is('administrador')) }}">Personal</a>
-                        <a href="/administrador/formulario" class="{{ $dropdownLinkClass(request()->is('administrador/formulario')) }}">+ Nuevo Admin</a>
+            @endif
+            @if ($puedeAdministracion)
+                <div class="group relative">
+                    <a href="/administrador" class="{{ $navLinkClass($adminActive) }}">
+                        Administracion
+                    </a>
+                    <div class="absolute right-0 top-full z-50 hidden w-56 pt-2 group-hover:block">
+                        <div class="vm-dropdown-menu">
+                            <a href="/administrador" class="{{ $dropdownLinkClass(request()->is('administrador')) }}">Equipo</a>
+                            <a href="/administrador/formulario" class="{{ $dropdownLinkClass(request()->is('administrador/formulario')) }}">+ Nuevo integrante</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
+            @auth('admin')
+                <form action="{{ route('logout') }}" method="POST" class="inline-flex">
+                    @csrf
+                    <button type="submit" class="inline-flex px-3 py-2 transition text-[#d8e2ef] hover:text-white hover:bg-[#172232] rounded-lg">
+                        Cerrar sesion
+                    </button>
+                </form>
+            @endauth
 
         </div>
     </div>

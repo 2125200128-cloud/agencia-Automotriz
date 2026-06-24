@@ -1,102 +1,98 @@
 @extends('plantilla.base')
 
 @section('dinamico')
+@php
+    $admin = Auth::guard('admin')->user();
+@endphp
 <section class="vm-page-section">
-    <div class="mx-auto grid min-h-[calc(100vh-180px)] max-w-screen-xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-        <div>
-            <span class="vm-badge">
-                Veloce Motors
-            </span>
-            <h1 class="mt-6 text-4xl font-black leading-tight text-black sm:text-5xl lg:text-6xl">
-                Iniciar sesion
-            </h1>
-            <p class="mt-5 max-w-xl text-lg leading-8 text-gray-700">
-                Accede para consultar tus pedidos, registrar compras y dar seguimiento a tus solicitudes dentro de Veloce Motors.
+    <div class="vm-container-2xl">
+        <div class="vm-page-header mb-8">
+            <p class="vm-header-tag">Dashboard</p>
+            <h1 class="vm-header-title">Panel administrativo</h1>
+            <p class="vm-header-desc">
+                Bienvenido, {{ Auth::guard('admin')->user()->nombres ?? 'Administrador' }}. Consulta el estado general de Veloce Motors.
             </p>
-            <div class="mt-8 flex flex-wrap gap-3">
-                <a href="/producto" class="vm-btn-outline">
-                    Ver catalogo
-                </a>
-                <a href="/cliente/mis-pedidos" class="vm-btn-solid">
-                    Mis pedidos
-                </a>
-            </div>
         </div>
-        <div class="grid gap-6">
-            <div class="vm-card-form">
-                <div class="mb-6">
-                    <h2 class="text-2xl font-black text-black">Ya tengo una cuenta</h2>
-                    <p class="mt-2 text-sm leading-6 text-gray-500">Ingresa tus datos para continuar.</p>
+
+        <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <article class="vm-card-form">
+                <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">Inventario</p>
+                <h2 class="mt-3 text-4xl font-black text-black">{{ $totalVehiculos ?? 0 }}</h2>
+                <p class="mt-2 text-sm text-gray-500">Vehiculos registrados</p>
+            </article>
+
+            <article class="vm-card-form">
+                <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">Catalogos</p>
+                <h2 class="mt-3 text-4xl font-black text-black">{{ $categorias->count() ?? 0 }}</h2>
+                <p class="mt-2 text-sm text-gray-500">Tipos de vehiculo</p>
+            </article>
+
+            <article class="vm-card-form">
+                <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">Marcas</p>
+                <h2 class="mt-3 text-4xl font-black text-black">{{ $marcas->count() ?? 0 }}</h2>
+                <p class="mt-2 text-sm text-gray-500">Fabricantes activos</p>
+            </article>
+
+            <article class="vm-card-form">
+                <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">Sesion</p>
+                <h2 class="mt-3 text-2xl font-black text-black">{{ $admin?->rolVisible() ?? 'Admin' }}</h2>
+                <p class="mt-2 text-sm text-gray-500">Guard admin activo</p>
+            </article>
+        </div>
+
+        <div class="mt-8 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
+            <section class="vm-card-form">
+                <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-2xl font-black text-black">Vehiculos recientes</h2>
+                        <p class="mt-1 text-sm text-gray-500">Ultimos registros activos del inventario.</p>
+                    </div>
+                    @if ($admin?->puede('inventario'))
+                        <a href="/producto/formulario" class="vm-btn-primary text-center">+ Nuevo vehiculo</a>
+                    @endif
                 </div>
 
-                <form action="#" method="POST" class="space-y-5">
-                    @csrf
-                    <div>
-                        <label for="login_email" class="vm-input-label">Correo electronico</label>
-                        <input type="email" id="login_email" name="email" class="vm-input-text" required>
-                    </div>
-
-                    <div>
-                        <div class="mb-2 flex items-center justify-between gap-4">
-                            <label for="login_password" class="vm-input-label !mb-0">Contrasena</label>
-                            <a href="#" class="text-xs font-medium text-gray-500 transition hover:text-black">Olvide mi contrasena</a>
+                <div class="grid gap-4 md:grid-cols-3">
+                    @forelse ($vehiculos as $vehiculo)
+                        <article class="vm-card">
+                            <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">{{ $vehiculo->marca->nombre ?? 'Sin marca' }}</p>
+                            <h3 class="mt-2 text-xl font-black text-black">{{ $vehiculo->nombre }}</h3>
+                            <p class="mt-2 text-sm text-gray-500">{{ $vehiculo->tipo->nombre ?? 'Sin tipo' }}</p>
+                            <p class="mt-4 text-lg font-black text-[#003f7d]">${{ number_format((float) $vehiculo->precio, 2) }}</p>
+                        </article>
+                    @empty
+                        <div class="md:col-span-3 rounded-xl border border-gray-200 bg-gray-50 p-8 text-center text-gray-500">
+                            No hay vehiculos activos registrados.
                         </div>
-                        <input type="password" id="login_password" name="password" class="vm-input-text" required>
-                    </div>
-
-                    <button type="submit" class="vm-btn-primary-full">
-                        Iniciar sesion
-                    </button>
-                </form>
-            </div>
-            <div class="vm-card-form-muted">
-                <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                        <h2 class="text-2xl font-black text-black">Crear cuenta</h2>
-                        <p class="mt-2 text-sm leading-6 text-gray-500">Registrate para poder comprar vehiculos y consultar tus movimientos.</p>
-                    </div>
-                    <span class="inline-flex self-start rounded-full border border-black bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-black">
-                        Nuevo cliente
-                    </span>
+                    @endforelse
                 </div>
+            </section>
 
-                <form action="/cliente" method="POST" enctype="multipart/form-data" class="space-y-5">
-                    @csrf
-                    <div class="grid gap-5 md:grid-cols-2">
-                        <div class="md:col-span-2">
-                            <label for="nombre" class="vm-input-label">Nombre completo</label>
-                            <input type="text" id="nombre" name="nombre" class="vm-input-text" required>
-                        </div>
-
-                        <div>
-                            <label for="email" class="vm-input-label">Correo electronico</label>
-                            <input type="email" id="email" name="email" class="vm-input-text" required>
-                        </div>
-
-                        <div>
-                            <label for="telefono" class="vm-input-label">Telefono</label>
-                            <input type="tel" id="telefono" name="telefono" class="vm-input-text" required>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label for="password" class="vm-input-label">Contrasena</label>
-                            <input type="password" id="password" name="password" class="vm-input-text" required>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="vm-input-label">Foto de perfil opcional</label>
-                            <label for="foto" class="vm-file-upload-label">
-                                <span class="vm-file-upload-text">Haz clic para subir JPG o PNG</span>
-                                <input id="foto" name="foto" type="file" class="hidden" accept="image/*">
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="vm-btn-primary-full">
-                        Registrarme
-                    </button>
-                </form>
-            </div>
+            <aside class="vm-card-form">
+                <h2 class="text-2xl font-black text-black">Accesos rapidos</h2>
+                <div class="mt-5 grid gap-3">
+                    @if ($admin?->puede('inventario'))
+                        <a href="/producto" class="vm-btn-outline text-center">Inventario</a>
+                    @endif
+                    @if ($admin?->puede('ventas'))
+                        <a href="/pedido" class="vm-btn-outline text-center">Ventas</a>
+                    @elseif ($admin?->puede('ventas_registro'))
+                        <a href="/pedido/formulario" class="vm-btn-outline text-center">Registrar venta</a>
+                    @endif
+                    @if ($admin?->puede('pagos'))
+                        <a href="/pagos" class="vm-btn-outline text-center">Cobros</a>
+                    @endif
+                    @if ($admin?->puede('citas'))
+                        <a href="/administrador/citas" class="vm-btn-outline text-center">Agenda de pruebas</a>
+                    @endif
+                    @if ($admin?->puede('administracion'))
+                        <a href="/administrador/valuador" class="vm-btn-outline text-center">Valuador</a>
+                    @endif
+                    @if ($admin?->puede('catalogos'))
+                        <a href="/catalogos" class="vm-btn-outline text-center">Catalogos</a>
+                    @endif
+                </div>
+            </aside>
         </div>
     </div>
 </section>
