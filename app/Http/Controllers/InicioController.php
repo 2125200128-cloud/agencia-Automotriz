@@ -8,6 +8,19 @@ use App\Models\Tipo;
 
 class InicioController extends Controller
 {
+    public function publico()
+    {
+        return view('index', [
+            'vehiculos' => Producto::query()
+                ->with(['marca', 'modelo', 'tipo', 'color'])
+                ->where('estado', 'activo')
+                ->orderByDesc('id')
+                ->get(),
+            'marcas' => Marca::query()->orderBy('nombre')->get(),
+            'categorias' => Tipo::query()->withCount('productos')->orderBy('nombre')->get(),
+        ]);
+    }
+
     public function inicio()
     {
         return view('inicio', [

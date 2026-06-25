@@ -8,6 +8,26 @@
             <h1 class="vm-header-title">Mis Pedidos</h1>
             <p class="vm-header-desc">Consulta el estado de tus compras y sigue el proceso de entrega.</p>
         </div>
+        <div class="vm-card-form mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-widest text-[#1c69d4]">Sesion de cliente</p>
+                @if (session('cliente_id'))
+                    <h2 class="mt-1 text-xl font-black text-black">{{ session('cliente_nombre') }}</h2>
+                    <p class="mt-1 text-sm text-gray-500">{{ session('cliente_correo') }}</p>
+                @else
+                    <h2 class="mt-1 text-xl font-black text-black">Invitado</h2>
+                    <p class="mt-1 text-sm text-gray-500">Inicia sesion para vincular tus pedidos a tu cuenta.</p>
+                @endif
+            </div>
+            @if (session('cliente_id'))
+                <form action="{{ route('cliente.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="vm-btn-secondary">Cerrar sesion</button>
+                </form>
+            @else
+                <a href="{{ route('cliente.login') }}" class="vm-btn-primary text-center">Iniciar con Google</a>
+            @endif
+        </div>
         <div class="vm-card-form">
             <h3 class="text-lg font-bold text-black mb-4">Buscar mi pedido</h3>
             <div class="flex gap-3">

@@ -14,15 +14,21 @@ use App\Http\Controllers\TipoController;
 use App\Http\Controllers\ProductoPedidoController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ClienteSocialAuthController;
 
-Route::get('/', fn () => redirect('/login'));
-Route::get('/login', [LoginController::class, 'show'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::get('/', [InicioController::class, 'publico'])->name('inicio');
+Route::redirect('/login', '/');
+Route::get('/veloce-interno', [LoginController::class, 'show'])->name('login');
+Route::post('/veloce-interno', [LoginController::class, 'login']);
 
 Route::get('/cliente/cita', [ClienteController::class, 'citaFormulario'])->name('cliente.cita');
 Route::post('/cliente/cita', [ClienteController::class, 'guardarCita'])->name('cliente.cita.guardar');
 Route::post('/cliente/cita/validar', [ClienteController::class, 'validarLicencia']);
 Route::post('/cliente', [ClienteController::class, 'guardar']);
+Route::get('/cliente/login', [ClienteSocialAuthController::class, 'showLogin'])->name('cliente.login');
+Route::get('/cliente/login/google', [ClienteSocialAuthController::class, 'redirectToGoogle'])->name('cliente.google.redirect');
+Route::get('/cliente/login/google/callback', [ClienteSocialAuthController::class, 'handleGoogleCallback'])->name('cliente.google.callback');
+Route::post('/cliente/logout', [ClienteSocialAuthController::class, 'logout'])->name('cliente.logout');
 Route::view('/cliente/mis-pedidos', 'clientes.mis-pedidos');
 
 Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
