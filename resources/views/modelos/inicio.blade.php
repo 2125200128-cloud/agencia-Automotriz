@@ -23,7 +23,7 @@
                                 <td class="vm-table-td">@include('plantilla.imagen-tabla', ['imagen' => $modelo->imagen, 'alt' => $modelo->nombre])</td>
                                 <td class="vm-table-td">{{ $modelo->marca->nombre ?? 'Sin marca' }}</td>
                                 <td class="vm-table-td font-bold text-black">{{ $modelo->nombre }}</td>
-                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/modelos/{{ $modelo->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/modelos/{{ $modelo->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a><a href="/modelos/{{ $modelo->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a></div></td>
+                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/modelos/{{ $modelo->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/modelos/{{ $modelo->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a>@if(Auth::guard('admin')->user()?->esMaster())<a href="/modelos/{{ $modelo->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>@endif</div></td>
                             </tr>
                         @empty
                             <tr><td colspan="5" class="vm-table-td py-10 text-center">No hay modelos registrados.</td></tr>

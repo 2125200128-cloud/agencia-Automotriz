@@ -33,11 +33,15 @@
                                         @php
                                             $valor = data_get($registro, $atributo);
                                             $esImagen = str_contains($atributo, 'imagen');
-                                            $imagenPublica = $valor && file_exists(public_path($valor));
-                                            $imagenStorage = $valor && Illuminate\Support\Facades\Storage::disk('public')->exists($valor);
+                                            $imagenUrl = null;
+                                            if ($valor && $esImagen) {
+                                                $imagenUrl = str_starts_with($valor, 'http')
+                                                    ? $valor
+                                                    : (file_exists(public_path($valor)) ? asset($valor) : asset('storage/'.$valor));
+                                            }
                                         @endphp
-                                        @if ($esImagen && ($imagenPublica || $imagenStorage))
-                                            <img src="{{ $imagenPublica ? asset($valor) : asset('storage/'.$valor) }}" alt="{{ $encabezado }}" class="h-12 w-20 rounded object-cover">
+                                        @if ($imagenUrl)
+                                            <img src="{{ $imagenUrl }}" alt="{{ $encabezado }}" class="h-12 w-20 rounded object-cover">
                                         @else
                                             {{ $valor ?? 'Sin registro' }}
                                         @endif

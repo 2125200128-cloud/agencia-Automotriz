@@ -20,17 +20,19 @@
     $catalogosActive = request()->routeIs('catalogos.*', 'catalogos', 'marcas.*', 'modelos.*', 'colores.*', 'tipos.*') || request()->is('catalogos', 'catalogos/*', 'marcas', 'marcas/*', 'modelos', 'modelos/*', 'colores', 'colores/*', 'tipos', 'tipos/*');
     $adminActive = request()->routeIs('administradores.*', 'administrador.*', 'administradores', 'administrador') || request()->is('administrador', 'administrador/*', 'administradores', 'administradores/*');
     $admin = Auth::guard('admin')->user();
-    $puedeInventario = $admin?->puede('inventario') ?? false;
+    $puedeInventario = ($admin?->puede('inventario') ?? false) || ($admin?->puede('inventario_ver') ?? false);
+    $puedeGestionarInventario = $admin?->puede('inventario') ?? false;
     $puedeCatalogos = $admin?->puede('catalogos') ?? false;
     $puedeVentas = $admin?->puede('ventas') ?? false;
     $puedeRegistrarVentas = $admin?->puede('ventas_registro') ?? false;
     $puedePagos = $admin?->puede('pagos') ?? false;
     $puedeCitas = $admin?->puede('citas') ?? false;
+    $puedeValuador = $admin?->puede('valuador') ?? false;
     $puedeAdministracion = $admin?->puede('administracion') ?? false;
 @endphp
 <nav class="vm-navbar">
     <div class="vm-navbar-container">
-        <a href="{{ url('/dashboard') }}" class="flex items-center gap-3">
+        <a href="{{ Auth::guard('admin')->check() ? url('/dashboard') : url('/') }}" class="flex items-center gap-3">
             <span class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[#2f3d4f] bg-[#0f141b] shadow-[0_0_18px_rgba(28,105,212,0.18)]">
                 <img src="{{ asset('imagenes/logovelocemotor.png') }}" alt="Logo Veloce Motors" class="h-full w-full object-cover">
             </span>
@@ -39,7 +41,11 @@
             </span>
         </a>
         <div class="flex flex-wrap items-center gap-1 text-sm font-medium">
-            <a href="{{ url('/dashboard') }}" class="{{ $navLinkClass($inicioActive) }}">Dashboard</a>
+            @auth('admin')
+                <a href="{{ url('/dashboard') }}" class="{{ $navLinkClass($inicioActive) }}">Dashboard</a>
+            @else
+                <a href="{{ url('/') }}" class="{{ $navLinkClass(request()->routeIs('inicio')) }}">Inicio</a>
+            @endauth
             @if ($puedeInventario)
                 <div class="group relative">
                     <a href="/producto" class="{{ $navLinkClass($productosActive) }}">
@@ -48,7 +54,9 @@
                     <div class="absolute left-0 top-full z-50 hidden w-48 pt-2 group-hover:block">
                         <div class="vm-dropdown-menu">
                             <a href="/producto" class="{{ $dropdownLinkClass(request()->is('producto')) }}">Ver inventario</a>
-                            <a href="/producto/formulario" class="{{ $dropdownLinkClass(request()->is('producto/formulario')) }}">+ Nuevo vehiculo</a>
+                            @if ($puedeGestionarInventario)
+                                <a href="/producto/formulario" class="{{ $dropdownLinkClass(request()->is('producto/formulario')) }}">+ Nuevo vehiculo</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -91,8 +99,10 @@
             @if ($puedeCitas)
                 <a href="{{ url('/administrador/citas') }}" class="{{ $navLinkClass(request()->is('administrador/citas')) }}">Agenda de pruebas</a>
             @endif
-            @if ($puedeAdministracion)
+            @if ($puedeValuador)
                 <a href="{{ url('/administrador/valuador') }}" class="{{ $navLinkClass(request()->is('administrador/valuador')) }}">Valuador</a>
+            @endif
+            @if ($puedeAdministracion)
                 <div class="group relative">
                     <a href="/proveedor" class="{{ $navLinkClass($proveedoresActive) }}">
                         Socios
@@ -145,6 +155,10 @@
                         Cerrar sesion
                     </button>
                 </form>
+            @else
+                <a href="{{ route('cliente.login') }}" class="{{ $navLinkClass(request()->routeIs('cliente.login', 'cliente.google.redirect', 'cliente.google.callback')) }}">
+                    Google clientes
+                </a>
             @endauth
 
         </div>

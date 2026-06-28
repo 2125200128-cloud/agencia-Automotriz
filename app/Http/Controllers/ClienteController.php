@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Cita;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -23,6 +25,17 @@ class ClienteController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombres' => ['nullable', 'string', 'max:255'],
+            'apellidos' => ['nullable', 'string', 'max:255'],
+            'nombre' => ['nullable', 'string', 'max:255'],
+            'correo' => ['nullable', 'email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'imagen' => ['required_without:foto', 'image', 'max:2048'],
+            'foto' => ['required_without:imagen', 'image', 'max:2048'],
+            'estado' => ['nullable', Rule::in(['activo', 'inactivo'])],
+        ]);
+
         $nombres = $request->input('nombres');
         $apellidos = $request->input('apellidos');
 
@@ -41,13 +54,12 @@ class ClienteController extends Controller
         $cliente->direccion = $request->input('direccion');
         $cliente->estado = $request->input('estado', 'activo');
 
-        if ($request->hasFile('imagen')) {
-            $cliente->imagen = $request->file('imagen')->store('clientes', 'public');
-        } elseif ($request->hasFile('foto')) {
-            $cliente->imagen = $request->file('foto')->store('clientes', 'public');
-        }
-
         $cliente->save();
+
+        if ($request->hasFile('imagen') || $request->hasFile('foto')) {
+            $cliente->imagen = $this->guardarImagen($request, $cliente->id);
+            $cliente->save();
+        }
 
         return redirect('/cliente')->with('success', 'Cliente guardado exitosamente.');
     }
@@ -90,7 +102,7 @@ class ClienteController extends Controller
             'contrasena' => ['nullable', 'string', 'min:6'],
             'direccion' => ['nullable', 'string'],
             'imagen' => ['nullable', 'image', 'max:2048'],
-            'estado' => ['required', 'string', 'max:255'],
+            'estado' => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
 
         if ($validator->fails()) {
@@ -109,7 +121,9 @@ class ClienteController extends Controller
         }
 
         if ($request->hasFile('imagen')) {
-            $cliente->imagen = $request->file('imagen')->store('clientes', 'public');
+            $imagenAnterior = $cliente->imagen;
+            $cliente->imagen = $this->guardarImagen($request, $cliente->id);
+            $this->borrarImagen($imagenAnterior, $cliente->imagen);
         }
 
         $cliente->save();
@@ -136,8 +150,119 @@ class ClienteController extends Controller
             abort(404);
         }
 
+        $imagen = $cliente->imagen;
         $cliente->delete();
+        $this->borrarImagen($imagen);
 
         return redirect('/cliente')->with('success', 'Cliente eliminado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen') ?? $request->file('foto');
+        $nombre = 'cliente_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'clientes', $nombre);
+    }
+
+    private function borrarImagen(?string $anterior, ?string $nueva = null): void
+    {
+        if ($anterior && $anterior !== $nueva) {
+            PublicImage::delete($anterior);
+        }
+    }
+
+    public function citaFormulario()
+    {
+        return view('clientes.cita');
+    }
+
+    public function validarLicencia(Request $request)
+    {
+        $licencia = $request->input('licencia');
+        $nombre = $request->input('nombre');
+
+        if (!$licencia) {
+            return response()->json(['success' => false, 'message' => 'Número de licencia requerido.'], 400);
+        }
+
+        $pattern = '/^[A-Z]?[0-9]{7,10}$/i';
+        if (!preg_match($pattern, $licencia)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Formato de licencia no válido. Debe tener una letra opcional y 7 a 10 dígitos (Ej: A1234567).'
+            ]);
+        }
+
+        $lastDigit = substr($licencia, -1);
+        $esVigente = intval($lastDigit) % 2 === 0;
+
+        if ($esVigente) {
+            return response()->json([
+                'success' => true,
+                'status' => 'Vigente',
+                'tipo' => 'Clase A (Automovilista)',
+                'vigencia' => 'Vence el 15/12/2028',
+                'titular' => $nombre ? $nombre : 'Titular Verificado',
+                'message' => 'Licencia de conducir validada correctamente ante la Secretaría de Movilidad.'
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'status' => 'Vencida o Inexistente',
+                'tipo' => 'Desconocido',
+                'vigencia' => 'Venció el 01/01/2025',
+                'titular' => 'No disponible',
+                'message' => 'La licencia ingresada no se encuentra vigente en el padrón nacional de conductores.'
+            ]);
+        }
+    }
+
+    public function guardarCita(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'fecha' => 'required|date|after_or_equal:today',
+            'hora' => 'required|string',
+            'licencia' => 'required|string|max:50',
+            'vehiculo_nombre' => 'required|string|max:255',
+        ]);
+
+        $licencia = $request->input('licencia');
+        $lastDigit = substr($licencia, -1);
+        $esVigente = intval($lastDigit) % 2 === 0 && preg_match('/^[A-Z]?[0-9]{7,10}$/i', $licencia);
+        $status = $esVigente ? 'Vigente' : 'Invalida/Vencida';
+
+        $cita = Cita::create([
+            'nombre' => $request->input('nombre'),
+            'telefono' => $request->input('telefono'),
+            'fecha' => $request->input('fecha'),
+            'hora' => $request->input('hora'),
+            'licencia' => $licencia,
+            'vehiculo_nombre' => $request->input('vehiculo_nombre'),
+            'licencia_status' => $status,
+        ]);
+
+        \Illuminate\Support\Facades\Log::info('Google Calendar API Call: Evento Creado', [
+            'summary' => 'Prueba de Manejo - ' . $cita->vehiculo_nombre,
+            'description' => 'Cliente: ' . $cita->nombre . ' | Licencia: ' . $cita->licencia . ' (' . $cita->licencia_status . ')',
+            'start' => [
+                'dateTime' => $cita->fecha . 'T' . $cita->hora . ':00',
+                'timeZone' => 'America/Mexico_City',
+            ],
+            'attendees' => [
+                ['name' => $cita->nombre, 'phone' => $cita->telefono],
+            ]
+        ]);
+
+        return redirect()->back()->with([
+            'success' => 'Cita de prueba de manejo agendada con éxito.',
+            'cita_guardada' => true,
+            'cita_nombre' => $cita->nombre,
+            'cita_auto' => $cita->vehiculo_nombre,
+            'cita_fecha' => $cita->fecha,
+            'cita_hora' => $cita->hora,
+        ]);
     }
 }

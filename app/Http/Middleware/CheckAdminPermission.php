@@ -17,6 +17,10 @@ class CheckAdminPermission
             abort(403);
         }
 
+        if (in_array('master', $permisos, true) && !$admin->esMaster()) {
+            abort(403, 'Solo un administrador master puede acceder a esta seccion.');
+        }
+
         foreach ($permisos as $permiso) {
             if ($admin->puede($permiso)) {
                 return $next($request);

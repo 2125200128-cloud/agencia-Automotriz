@@ -15,19 +15,20 @@
         <div class="vm-table-card">
             <div class="overflow-x-auto">
                 <table class="vm-table">
-                    <thead class="vm-table-header"><tr><th class="vm-table-th">Nombre</th><th class="vm-table-th">Contacto</th><th class="vm-table-th">Telefono</th><th class="vm-table-th">Correo</th><th class="vm-table-th">Estado</th><th class="vm-table-th text-right">Acciones</th></tr></thead>
+                    <thead class="vm-table-header"><tr><th class="vm-table-th">Imagen</th><th class="vm-table-th">Nombre</th><th class="vm-table-th">Contacto</th><th class="vm-table-th">Telefono</th><th class="vm-table-th">Correo</th><th class="vm-table-th">Estado</th><th class="vm-table-th text-right">Acciones</th></tr></thead>
                     <tbody>
                         @forelse ($proveedores as $proveedor)
                             <tr class="vm-table-tr">
+                                <td class="vm-table-td">@include('plantilla.imagen-tabla', ['imagen' => $proveedor->imagen, 'alt' => $proveedor->nombre])</td>
                                 <td class="vm-table-td font-bold text-black">{{ $proveedor->nombre }}</td>
                                 <td class="vm-table-td">{{ $proveedor->contacto ?? 'Sin registro' }}</td>
                                 <td class="vm-table-td">{{ $proveedor->telefono ?? 'Sin registro' }}</td>
                                 <td class="vm-table-td">{{ $proveedor->correo ?? 'Sin registro' }}</td>
                                 <td class="vm-table-td"><span class="rounded-full border border-red-500/50 px-3 py-1 text-xs font-bold text-red-200">{{ $proveedor->estado }}</span></td>
-                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/proveedor/{{ $proveedor->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/proveedor/{{ $proveedor->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a><a href="/proveedor/{{ $proveedor->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a></div></td>
+                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/proveedor/{{ $proveedor->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/proveedor/{{ $proveedor->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a>@if(Auth::guard('admin')->user()?->esMaster())<a href="/proveedor/{{ $proveedor->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>@endif</div></td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="vm-table-td py-10 text-center">No hay proveedores registrados.</td></tr>
+                            <tr><td colspan="7" class="vm-table-td py-10 text-center">No hay proveedores registrados.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

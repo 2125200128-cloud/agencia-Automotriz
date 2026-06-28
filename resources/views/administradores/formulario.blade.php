@@ -23,7 +23,7 @@
                         <label class="vm-input-label" for="rol">Rol</label>
                         <select class="vm-input-text" id="rol" name="rol" required>
                             @foreach ($roles as $valor => $etiqueta)
-                                <option value="{{ $valor }}" @selected(old('rol', 'vendedor') === $valor)>{{ $etiqueta }}</option>
+                                <option value="{{ $valor }}" @selected(old('rol', 'base') === $valor)>{{ $etiqueta }}</option>
                             @endforeach
                         </select>
                     </div>

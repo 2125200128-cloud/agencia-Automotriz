@@ -15,7 +15,9 @@ class InicioController extends Controller
                 ->with(['marca', 'modelo', 'tipo', 'color'])
                 ->where('estado', 'activo')
                 ->orderByDesc('id')
-                ->get(),
+                ->get()
+                ->unique(fn ($producto) => $producto->numero_serie ?: mb_strtolower($producto->nombre))
+                ->values(),
             'marcas' => Marca::query()->orderBy('nombre')->get(),
             'categorias' => Tipo::query()->withCount('productos')->orderBy('nombre')->get(),
         ]);

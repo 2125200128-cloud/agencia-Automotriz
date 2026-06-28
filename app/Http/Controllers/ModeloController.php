@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Marca;
 use App\Models\ModeloVehiculo;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,12 +29,12 @@ class ModeloController extends Controller
         $modelo = new ModeloVehiculo();
         $modelo->marca_id = $request->input('marca_id');
         $modelo->nombre = $request->input('nombre');
+        $modelo->save();
 
         if ($request->hasFile('imagen')) {
-            $modelo->imagen = $request->file('imagen')->store('modelos', 'public');
+            $modelo->imagen = $this->guardarImagen($request, $modelo->id);
+            $modelo->save();
         }
-
-        $modelo->save();
 
         return redirect('/modelos')->with('success', 'Modelo guardado exitosamente.');
     }
@@ -84,7 +85,8 @@ class ModeloController extends Controller
         $modelo->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
-            $modelo->imagen = $request->file('imagen')->store('modelos', 'public');
+            PublicImage::delete($modelo->imagen);
+            $modelo->imagen = $this->guardarImagen($request, $modelo->id);
         }
 
         $modelo->save();
@@ -111,8 +113,17 @@ class ModeloController extends Controller
             abort(404);
         }
 
+        PublicImage::delete($modelo->imagen);
         $modelo->delete();
 
         return redirect('/modelos')->with('success', 'Modelo eliminado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen');
+        $nombre = 'modelo_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'modelos', $nombre);
     }
 }

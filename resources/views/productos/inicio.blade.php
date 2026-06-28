@@ -9,7 +9,9 @@
                 <h1 class="vm-header-title sm:text-5xl">Inventario de vehiculos</h1>
                 <p class="vm-header-desc">Productos con sus catalogos relacionados.</p>
             </div>
-            <a href="/producto/formulario" class="vm-btn-solid uppercase tracking-wide">+ Agregar</a>
+            @if(Auth::guard('admin')->user()?->puede('inventario'))
+                <a href="/producto/formulario" class="vm-btn-solid uppercase tracking-wide">+ Agregar</a>
+            @endif
         </div>
         @if (session('success'))<div class="mt-6 rounded-xl border border-red-500/40 bg-red-950/30 p-4 font-bold text-red-200">{{ session('success') }}</div>@endif
         <div class="vm-table-card">
@@ -28,7 +30,7 @@
                                 <td class="vm-table-td">{{ $producto->proveedor->nombre ?? 'Sin proveedor' }}</td>
                                 <td class="vm-table-td">${{ number_format((float) $producto->precio, 2) }}</td>
                                 <td class="vm-table-td"><span class="rounded-full border border-red-500/50 px-3 py-1 text-xs font-bold text-red-200">{{ $producto->estado }}</span></td>
-                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/producto/{{ $producto->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/producto/{{ $producto->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a><a href="/producto/{{ $producto->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a></div></td>
+                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/producto/{{ $producto->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a>@if(Auth::guard('admin')->user()?->puede('inventario'))<a href="/producto/{{ $producto->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a>@endif @if(Auth::guard('admin')->user()?->esMaster())<a href="/producto/{{ $producto->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>@endif</div></td>
                             </tr>
                         @empty
                             <tr><td colspan="10" class="vm-table-td py-10 text-center">No hay productos registrados.</td></tr>

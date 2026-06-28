@@ -8,8 +8,10 @@ use App\Models\ModeloVehiculo;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\Tipo;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProductoController extends Controller
 {
@@ -33,6 +35,16 @@ class ProductoController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'precio' => ['required', 'numeric', 'min:0'],
+            'existencia' => ['required', 'integer', 'min:0'],
+            'imagen_principal' => ['required', 'image', 'max:2048'],
+            'imagen_secundaria' => ['required', 'image', 'max:2048'],
+            'imagen_adicional' => ['required', 'image', 'max:2048'],
+            'estado' => ['nullable', Rule::in(['activo', 'inactivo'])],
+        ]);
+
         $producto = new Producto();
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
@@ -49,9 +61,11 @@ class ProductoController extends Controller
         $producto->descuento = $request->input('descuento', 0);
         $producto->estado = $request->input('estado', 'activo');
 
-        foreach (['imagen_principal', 'imagen_secundaria', 'imagen_adicional'] as $imagen) {
+        $producto->save();
+
+        foreach (['imagen_principal' => 'principal', 'imagen_secundaria' => 'secundaria', 'imagen_adicional' => 'adicional'] as $imagen => $sufijo) {
             if ($request->hasFile($imagen)) {
-                $producto->{$imagen} = $request->file($imagen)->store('productos', 'public');
+                $producto->{$imagen} = $this->guardarImagen($request, $imagen, $producto->id, $sufijo);
             }
         }
 
@@ -113,7 +127,7 @@ class ProductoController extends Controller
             'imagen_principal' => ['nullable', 'image', 'max:2048'],
             'imagen_secundaria' => ['nullable', 'image', 'max:2048'],
             'imagen_adicional' => ['nullable', 'image', 'max:2048'],
-            'estado' => ['required', 'string', 'max:255'],
+            'estado' => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
 
         if ($validator->fails()) {
@@ -135,9 +149,11 @@ class ProductoController extends Controller
         $producto->descuento = $request->input('descuento', 0);
         $producto->estado = $request->input('estado');
 
-        foreach (['imagen_principal', 'imagen_secundaria', 'imagen_adicional'] as $imagen) {
+        foreach (['imagen_principal' => 'principal', 'imagen_secundaria' => 'secundaria', 'imagen_adicional' => 'adicional'] as $imagen => $sufijo) {
             if ($request->hasFile($imagen)) {
-                $producto->{$imagen} = $request->file($imagen)->store('productos', 'public');
+                $imagenAnterior = $producto->{$imagen};
+                $producto->{$imagen} = $this->guardarImagen($request, $imagen, $producto->id, $sufijo);
+                $this->borrarImagen($imagenAnterior, $producto->{$imagen});
             }
         }
 
@@ -165,8 +181,33 @@ class ProductoController extends Controller
             abort(404);
         }
 
+        $imagenes = [
+            $producto->imagen_principal,
+            $producto->imagen_secundaria,
+            $producto->imagen_adicional,
+        ];
+
         $producto->delete();
 
+        foreach ($imagenes as $imagen) {
+            $this->borrarImagen($imagen);
+        }
+
         return redirect('/producto')->with('success', 'Producto eliminado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, string $campo, int $id, string $sufijo): string
+    {
+        $archivo = $request->file($campo);
+        $nombre = 'producto_' . $id . '_' . $sufijo . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'productos', $nombre);
+    }
+
+    private function borrarImagen(?string $anterior, ?string $nueva = null): void
+    {
+        if ($anterior && $anterior !== $nueva) {
+            PublicImage::delete($anterior);
+        }
     }
 }

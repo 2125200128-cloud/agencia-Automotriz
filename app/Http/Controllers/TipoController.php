@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tipo;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 
 class TipoController extends Controller
@@ -31,13 +32,21 @@ class TipoController extends Controller
     {
         $tipo = new Tipo();
         $tipo->nombre = $request->input('nombre');
-
-        if ($request->hasFile('imagen')) {
-            $tipo->imagen = $request->file('imagen')->store('tipos', 'public');
-        }
-
         $tipo->save();
 
+        if ($request->hasFile('imagen')) {
+            $tipo->imagen = $this->guardarImagen($request, $tipo->id);
+            $tipo->save();
+        }
+
         return redirect('/tipos')->with('success', 'Tipo guardado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen');
+        $nombre = 'tipo_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'tipos', $nombre);
     }
 }

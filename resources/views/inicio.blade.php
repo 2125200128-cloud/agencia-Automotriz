@@ -71,7 +71,7 @@
             <aside class="vm-card-form">
                 <h2 class="text-2xl font-black text-black">Accesos rapidos</h2>
                 <div class="mt-5 grid gap-3">
-                    @if ($admin?->puede('inventario'))
+                    @if ($admin?->puede('inventario') || $admin?->puede('inventario_ver'))
                         <a href="/producto" class="vm-btn-outline text-center">Inventario</a>
                     @endif
                     @if ($admin?->puede('ventas'))
@@ -85,7 +85,7 @@
                     @if ($admin?->puede('citas'))
                         <a href="/administrador/citas" class="vm-btn-outline text-center">Agenda de pruebas</a>
                     @endif
-                    @if ($admin?->puede('administracion'))
+                    @if ($admin?->puede('valuador'))
                         <a href="/administrador/valuador" class="vm-btn-outline text-center">Valuador</a>
                     @endif
                     @if ($admin?->puede('catalogos'))

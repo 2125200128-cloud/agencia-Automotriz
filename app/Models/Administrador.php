@@ -10,16 +10,16 @@ class Administrador extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public const ROL_ADMIN = 'admin';
-    public const ROL_ADMINISTRADOR_INVENTARIO = 'administrador_inventario';
-    public const ROL_GERENTE_VENTAS = 'gerente_ventas';
+    public const ROL_MASTER = 'master';
+    public const ROL_BASE = 'base';
     public const ROL_VENDEDOR = 'vendedor';
+    public const ROL_ALMACENISTA = 'almacenista';
 
     public const ROLES = [
-        self::ROL_ADMIN => 'Admin',
-        self::ROL_ADMINISTRADOR_INVENTARIO => 'Administrador de inventario',
-        self::ROL_GERENTE_VENTAS => 'Gerente de ventas',
+        self::ROL_MASTER => 'Master',
+        self::ROL_BASE => 'Base',
         self::ROL_VENDEDOR => 'Vendedor',
+        self::ROL_ALMACENISTA => 'Almacenista',
     ];
 
     public const ESTADOS = [
@@ -36,6 +36,13 @@ class Administrador extends Authenticatable
     protected $hidden = [
         'contrasena',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'imagen' => 'encrypted',
+        ];
+    }
 
     public function getAuthPassword()
     {
@@ -57,22 +64,45 @@ class Administrador extends Authenticatable
         return self::ROLES[$this->rolNormalizado()] ?? $this->rol;
     }
 
+    public function esMaster(): bool
+    {
+        return $this->rolNormalizado() === self::ROL_MASTER;
+    }
+
+    public function esBase(): bool
+    {
+        return $this->rolNormalizado() === self::ROL_BASE;
+    }
+
+    public function esVendedor(): bool
+    {
+        return $this->rolNormalizado() === self::ROL_VENDEDOR;
+    }
+
+    public function esAlmacenista(): bool
+    {
+        return $this->rolNormalizado() === self::ROL_ALMACENISTA;
+    }
+
     public function puede(string $permiso): bool
     {
-        $rol = $this->rolNormalizado();
+        if ($this->esMaster()) {
+            return true;
+        }
 
-        if (in_array($rol, [self::ROL_ADMIN, 'administrador', 'superadmin', 'gerente'], true)) {
+        if ($permiso === self::ROL_MASTER || $permiso === 'eliminar') {
+            return false;
+        }
+
+        if ($this->esBase()) {
             return true;
         }
 
         $permisos = [
-            self::ROL_ADMINISTRADOR_INVENTARIO => ['inventario', 'catalogos'],
-            self::ROL_GERENTE_VENTAS => ['ventas', 'pagos'],
-            self::ROL_VENDEDOR => ['citas', 'ventas_registro'],
-            'inventario' => ['inventario', 'catalogos'],
-            'ventas' => ['ventas', 'pagos'],
+            self::ROL_VENDEDOR => ['ventas', 'ventas_registro', 'inventario_ver'],
+            self::ROL_ALMACENISTA => ['inventario_ver', 'inventario', 'catalogos', 'valuador'],
         ];
 
-        return in_array($permiso, $permisos[$rol] ?? [], true);
+        return in_array($permiso, $permisos[$this->rolNormalizado()] ?? [], true);
     }
 }

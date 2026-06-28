@@ -520,3 +520,36 @@ tr:hover {
     border: 1px solid var(--vm-accent-dark) !important;
     color: #ffffff !important;
 }
+
+.overflow-x-auto:has(> table) {
+    max-height: min(62vh, 520px);
+    overflow: auto !important;
+}
+
+.overflow-x-auto:has(> table) > table {
+    min-width: 920px;
+}
+
+.overflow-x-auto:has(> table) thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.overflow-x-auto:has(> table)::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.overflow-x-auto:has(> table)::-webkit-scrollbar-track {
+    background: #eef4fb;
+}
+
+.overflow-x-auto:has(> table)::-webkit-scrollbar-thumb {
+    background: #9bb7dc;
+    border-radius: 999px;
+}
+
+.overflow-x-auto:has(> table)::-webkit-scrollbar-thumb:hover {
+    background: var(--vm-accent);
+}

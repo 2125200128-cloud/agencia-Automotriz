@@ -24,6 +24,7 @@ class Cliente extends Model
     {
         return [
             'contrasena' => 'hashed',
+            'direccion' => 'encrypted',
         ];
     }
 

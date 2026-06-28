@@ -36,25 +36,25 @@ Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/administrador/citas', [AdministradorController::class, 'citas'])->middleware('permiso.admin:citas')->name('administrador.citas');
+    Route::get('/administrador/valuador', [AdministradorController::class, 'valuador'])->middleware('permiso.admin:valuador')->name('administrador.valuador');
 
     Route::middleware('permiso.admin:administracion')->group(function () {
         Route::get('/administrador', [AdministradorController::class, 'listado']);
         Route::get('/administrador/formulario', [AdministradorController::class, 'inicio']);
         Route::post('/administrador', [AdministradorController::class, 'guardar']);
-        Route::get('/administrador/valuador', [AdministradorController::class, 'valuador'])->name('administrador.valuador');
         Route::get('/administrador/{id}', [AdministradorController::class, 'ver']);
         Route::get('/administrador/{id}/editar', [AdministradorController::class, 'edit']);
         Route::put('/administrador/{id}', [AdministradorController::class, 'update']);
-        Route::get('/administrador/{id}/eliminar', [AdministradorController::class, 'eliminar']);
-        Route::delete('/administrador/{id}', [AdministradorController::class, 'destroy']);
+        Route::get('/administrador/{id}/eliminar', [AdministradorController::class, 'eliminar'])->middleware('permiso.admin:master');
+        Route::delete('/administrador/{id}', [AdministradorController::class, 'destroy'])->middleware('permiso.admin:master');
 
         Route::get('/cliente', [ClienteController::class, 'listado']);
         Route::get('/cliente/formulario', [ClienteController::class, 'inicio']);
         Route::get('/cliente/{id}', [ClienteController::class, 'ver']);
         Route::get('/cliente/{id}/editar', [ClienteController::class, 'edit']);
         Route::put('/cliente/{id}', [ClienteController::class, 'update']);
-        Route::get('/cliente/{id}/eliminar', [ClienteController::class, 'eliminar']);
-        Route::delete('/cliente/{id}', [ClienteController::class, 'destroy']);
+        Route::get('/cliente/{id}/eliminar', [ClienteController::class, 'eliminar'])->middleware('permiso.admin:master');
+        Route::delete('/cliente/{id}', [ClienteController::class, 'destroy'])->middleware('permiso.admin:master');
 
         Route::get('/proveedor', [ProveedorController::class, 'listado']);
         Route::get('/proveedor/formulario', [ProveedorController::class, 'inicio']);
@@ -62,22 +62,22 @@ Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
         Route::get('/proveedor/{id}', [ProveedorController::class, 'ver']);
         Route::get('/proveedor/{id}/editar', [ProveedorController::class, 'edit']);
         Route::put('/proveedor/{id}', [ProveedorController::class, 'update']);
-        Route::get('/proveedor/{id}/eliminar', [ProveedorController::class, 'eliminar']);
-        Route::delete('/proveedor/{id}', [ProveedorController::class, 'destroy']);
+        Route::get('/proveedor/{id}/eliminar', [ProveedorController::class, 'eliminar'])->middleware('permiso.admin:master');
+        Route::delete('/proveedor/{id}', [ProveedorController::class, 'destroy'])->middleware('permiso.admin:master');
     });
 
     Route::get('/pedido', [PedidoController::class, 'listado'])->middleware('permiso.admin:ventas');
     Route::get('/pedido/formulario', [PedidoController::class, 'inicio'])->middleware('permiso.admin:ventas,ventas_registro');
     Route::post('/pedido', [PedidoController::class, 'guardar'])->middleware('permiso.admin:ventas,ventas_registro');
 
-    Route::get('/producto', [ProductoController::class, 'listado'])->middleware('permiso.admin:inventario');
+    Route::get('/producto', [ProductoController::class, 'listado'])->middleware('permiso.admin:inventario,inventario_ver');
     Route::get('/producto/formulario', [ProductoController::class, 'inicio'])->middleware('permiso.admin:inventario');
     Route::post('/producto', [ProductoController::class, 'guardar'])->middleware('permiso.admin:inventario');
-    Route::get('/producto/{id}', [ProductoController::class, 'ver'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/{id}', [ProductoController::class, 'ver'])->middleware('permiso.admin:inventario,inventario_ver');
     Route::get('/producto/{id}/editar', [ProductoController::class, 'edit'])->middleware('permiso.admin:inventario');
     Route::put('/producto/{id}', [ProductoController::class, 'update'])->middleware('permiso.admin:inventario');
-    Route::get('/producto/{id}/eliminar', [ProductoController::class, 'eliminar'])->middleware('permiso.admin:inventario');
-    Route::delete('/producto/{id}', [ProductoController::class, 'destroy'])->middleware('permiso.admin:inventario');
+    Route::get('/producto/{id}/eliminar', [ProductoController::class, 'eliminar'])->middleware('permiso.admin:master');
+    Route::delete('/producto/{id}', [ProductoController::class, 'destroy'])->middleware('permiso.admin:master');
 
     Route::get('/pagos', [PagoController::class, 'listado'])->middleware('permiso.admin:pagos');
     Route::get('/pagos/formulario', [PagoController::class, 'inicio'])->middleware('permiso.admin:pagos');
@@ -90,8 +90,8 @@ Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
     Route::get('/marcas/{id}', [MarcaController::class, 'ver'])->middleware('permiso.admin:catalogos');
     Route::get('/marcas/{id}/editar', [MarcaController::class, 'edit'])->middleware('permiso.admin:catalogos');
     Route::put('/marcas/{id}', [MarcaController::class, 'update'])->middleware('permiso.admin:catalogos');
-    Route::get('/marcas/{id}/eliminar', [MarcaController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
-    Route::delete('/marcas/{id}', [MarcaController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+    Route::get('/marcas/{id}/eliminar', [MarcaController::class, 'eliminar'])->middleware('permiso.admin:master');
+    Route::delete('/marcas/{id}', [MarcaController::class, 'destroy'])->middleware('permiso.admin:master');
 
     Route::get('/modelos', [ModeloController::class, 'listado'])->middleware('permiso.admin:catalogos');
     Route::get('/modelos/formulario', [ModeloController::class, 'inicio'])->middleware('permiso.admin:catalogos');
@@ -99,8 +99,8 @@ Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
     Route::get('/modelos/{id}', [ModeloController::class, 'ver'])->middleware('permiso.admin:catalogos');
     Route::get('/modelos/{id}/editar', [ModeloController::class, 'edit'])->middleware('permiso.admin:catalogos');
     Route::put('/modelos/{id}', [ModeloController::class, 'update'])->middleware('permiso.admin:catalogos');
-    Route::get('/modelos/{id}/eliminar', [ModeloController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
-    Route::delete('/modelos/{id}', [ModeloController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+    Route::get('/modelos/{id}/eliminar', [ModeloController::class, 'eliminar'])->middleware('permiso.admin:master');
+    Route::delete('/modelos/{id}', [ModeloController::class, 'destroy'])->middleware('permiso.admin:master');
 
     Route::get('/colores', [ColorController::class, 'listado'])->middleware('permiso.admin:catalogos');
     Route::get('/colores/formulario', [ColorController::class, 'inicio'])->middleware('permiso.admin:catalogos');
@@ -108,8 +108,8 @@ Route::middleware(['auth:admin', 'admin.activo'])->group(function () {
     Route::get('/colores/{id}', [ColorController::class, 'ver'])->middleware('permiso.admin:catalogos');
     Route::get('/colores/{id}/editar', [ColorController::class, 'edit'])->middleware('permiso.admin:catalogos');
     Route::put('/colores/{id}', [ColorController::class, 'update'])->middleware('permiso.admin:catalogos');
-    Route::get('/colores/{id}/eliminar', [ColorController::class, 'eliminar'])->middleware('permiso.admin:catalogos');
-    Route::delete('/colores/{id}', [ColorController::class, 'destroy'])->middleware('permiso.admin:catalogos');
+    Route::get('/colores/{id}/eliminar', [ColorController::class, 'eliminar'])->middleware('permiso.admin:master');
+    Route::delete('/colores/{id}', [ColorController::class, 'destroy'])->middleware('permiso.admin:master');
 
     Route::get('/tipos', [TipoController::class, 'listado'])->middleware('permiso.admin:catalogos');
     Route::get('/tipos/formulario', [TipoController::class, 'inicio'])->middleware('permiso.admin:catalogos');

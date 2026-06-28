@@ -43,7 +43,7 @@
                                     <div class="flex justify-end gap-2">
                                         <a href="/administrador/{{ $administrador->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a>
                                         <a href="/administrador/{{ $administrador->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a>
-                                        <a href="/administrador/{{ $administrador->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>
+                                        @if(Auth::guard('admin')->user()?->esMaster())<a href="/administrador/{{ $administrador->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>@endif
                                     </div>
                                 </td>
                             </tr>

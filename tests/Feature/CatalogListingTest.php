@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Cliente;
 use App\Models\Color;
+use App\Models\Administrador;
 use App\Models\Marca;
 use App\Models\ModeloVehiculo;
 use App\Models\Pago;
@@ -11,6 +12,7 @@ use App\Models\Pedido;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\Tipo;
+use App\Support\PublicImage;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -24,6 +26,7 @@ class CatalogListingTest extends TestCase
     {
         parent::setUp();
         $this->seed();
+        $this->actingAs(Administrador::first(), 'admin');
     }
     public function test_it_lists_administradores(): void
     {
@@ -152,6 +155,7 @@ class CatalogListingTest extends TestCase
     public function test_order_and_payment_forms_load_related_records(): void
     {
         $cliente = Cliente::first();
+        $producto = Producto::first();
         $pedido = Pedido::create([
             'cliente_id' => $cliente->id,
             'fecha' => now()->toDateString(),
@@ -161,7 +165,8 @@ class CatalogListingTest extends TestCase
 
         $this->get('/pedido/formulario')
             ->assertStatus(200)
-            ->assertSee($cliente->nombres);
+            ->assertSee($cliente->nombres)
+            ->assertSee($producto->nombre);
 
         $this->get('/pagos/formulario')
             ->assertStatus(200)
@@ -180,7 +185,12 @@ class CatalogListingTest extends TestCase
 
     public function test_forms_register_catalog_records(): void
     {
-        $this->post('/marcas', ['nombre' => 'Honda'])
+        Storage::fake('public');
+
+        $this->post('/marcas', [
+            'nombre' => 'Honda',
+            'imagen' => $this->fakePng('honda.png'),
+        ])
             ->assertRedirect('/marcas');
         $this->post('/colores', ['nombre' => 'Verde'])
             ->assertRedirect('/colores');
@@ -212,7 +222,7 @@ class CatalogListingTest extends TestCase
         $imagen = Marca::where('nombre', 'Honda')->value('imagen');
 
         $this->assertNotNull($imagen);
-        Storage::disk('public')->assertExists($imagen);
+        Storage::disk('public')->assertExists(PublicImage::pathFromValue($imagen));
     }
 
     public function test_product_form_stores_three_uploaded_images(): void
@@ -238,9 +248,62 @@ class CatalogListingTest extends TestCase
 
         $producto = Producto::where('numero_serie', 'GALERIA-001')->first();
 
-        Storage::disk('public')->assertExists($producto->imagen_principal);
-        Storage::disk('public')->assertExists($producto->imagen_secundaria);
-        Storage::disk('public')->assertExists($producto->imagen_adicional);
+        Storage::disk('public')->assertExists(PublicImage::pathFromValue($producto->imagen_principal));
+        Storage::disk('public')->assertExists(PublicImage::pathFromValue($producto->imagen_secundaria));
+        Storage::disk('public')->assertExists(PublicImage::pathFromValue($producto->imagen_adicional));
+    }
+
+    public function test_base_admin_cannot_see_or_access_delete_actions(): void
+    {
+        $base = Administrador::where('rol', Administrador::ROL_BASE)->first();
+        $producto = Producto::first();
+
+        $this->actingAs($base, 'admin');
+
+        $this->get('/producto')
+            ->assertStatus(200)
+            ->assertDontSee('/producto/'.$producto->id.'/eliminar', false);
+
+        $this->get('/producto/'.$producto->id.'/eliminar')
+            ->assertForbidden();
+    }
+
+    public function test_vendedor_can_register_sales_and_view_inventory_without_managing_it(): void
+    {
+        $vendedor = Administrador::where('rol', Administrador::ROL_VENDEDOR)->first();
+        $producto = Producto::first();
+
+        $this->actingAs($vendedor, 'admin');
+
+        $this->get('/producto')
+            ->assertStatus(200)
+            ->assertDontSee('/producto/formulario', false)
+            ->assertDontSee('/producto/'.$producto->id.'/editar', false);
+
+        $this->get('/producto/formulario')->assertForbidden();
+        $this->get('/producto/'.$producto->id.'/editar')->assertForbidden();
+
+        $this->get('/pedido')->assertStatus(200);
+        $this->get('/pedido/formulario')->assertStatus(200);
+        $this->get('/productos-pedido')->assertStatus(200);
+        $this->get('/productos-pedido/formulario')->assertStatus(200);
+    }
+
+    public function test_almacenista_can_manage_inventory_catalogs_and_valuator_but_not_sales(): void
+    {
+        $almacenista = Administrador::where('rol', Administrador::ROL_ALMACENISTA)->first();
+
+        $this->actingAs($almacenista, 'admin');
+
+        $this->get('/producto')->assertStatus(200);
+        $this->get('/producto/formulario')->assertStatus(200);
+        $this->get('/catalogos')->assertStatus(200);
+        $this->get('/marcas/formulario')->assertStatus(200);
+        $this->get('/colores/formulario')->assertStatus(200);
+        $this->get('/administrador/valuador')->assertStatus(200);
+
+        $this->get('/pedido')->assertForbidden();
+        $this->get('/pedido/formulario')->assertForbidden();
     }
 
     public function test_home_only_shows_one_card_for_a_repeated_serial_number(): void
@@ -259,18 +322,21 @@ class CatalogListingTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $this->assertSame(1, substr_count($response->getContent(), '<h3 class="text-xl font-black text-white">Auto duplicado</h3>'));
+        $this->assertSame(1, substr_count($response->getContent(), '>Auto duplicado<'));
     }
 
     public function test_forms_register_people_and_provider(): void
     {
+        Storage::fake('public');
+
         $this->post('/administrador', [
             'nombres' => 'Elena',
             'apellidos' => 'Ramos',
             'correo' => 'elena@example.com',
             'usuario' => 'elena.ramos',
             'contrasena' => 'secreto1',
-            'rol' => 'capturista',
+            'imagen' => $this->fakePng('elena.png'),
+            'rol' => Administrador::ROL_MASTER,
             'estado' => 'activo',
         ])->assertRedirect('/administrador');
 
@@ -279,13 +345,15 @@ class CatalogListingTest extends TestCase
             'email' => 'pedro@example.com',
             'telefono' => '555-0000',
             'password' => 'secreto1',
+            'imagen' => $this->fakePng('pedro.png'),
         ])->assertRedirect('/cliente');
 
         $this->post('/proveedor', [
-            'nombre_empresa' => 'Autos Centro',
+            'nombre' => 'Autos Centro',
             'telefono' => '555-1111',
-            'email' => 'ventas@autoscentro.com',
-            'nombre_representante' => 'Laura Perez',
+            'correo' => 'ventas@autoscentro.com',
+            'contacto' => 'Laura Perez',
+            'imagen' => $this->fakePng('autos-centro.png'),
         ])->assertRedirect('/proveedor');
 
         $this->assertDatabaseHas('administradores', ['correo' => 'elena@example.com']);
@@ -295,6 +363,8 @@ class CatalogListingTest extends TestCase
 
     public function test_forms_register_product_and_order_detail(): void
     {
+        Storage::fake('public');
+
         $this->post('/producto', [
             'nombre' => 'Vehiculo de prueba',
             'precio' => 250000,
@@ -305,6 +375,9 @@ class CatalogListingTest extends TestCase
             'proveedor_id' => Proveedor::first()->id,
             'existencia' => 1,
             'estado' => 'activo',
+            'imagen_principal' => $this->fakePng('principal.png'),
+            'imagen_secundaria' => $this->fakePng('secundaria.png'),
+            'imagen_adicional' => $this->fakePng('adicional.png'),
         ])->assertRedirect('/producto');
 
         $pedido = Pedido::create([
@@ -333,24 +406,22 @@ class CatalogListingTest extends TestCase
 
     public function test_forms_register_order_and_payment(): void
     {
+        $producto = Producto::first();
+
         $this->post('/pedido', [
             'cliente_id' => Cliente::first()->id,
+            'producto_id' => $producto->id,
             'fecha' => now()->toDateString(),
+            'cantidad' => 1,
             'descuento' => 0,
             'iva' => 160,
-            'total' => 1160,
             'estado' => 'pendiente',
+            'metodo_pago' => 'efectivo',
+            'monto_pago' => 1160,
+            'estado_pago' => 'completado',
         ])->assertRedirect('/pedido');
 
         $pedido = Pedido::latest('id')->first();
-
-        $this->post('/pagos', [
-            'pedido_id' => $pedido->id,
-            'metodo_pago' => 'efectivo',
-            'monto' => 1160,
-            'fecha_pago' => now()->toDateString(),
-            'estado' => 'completado',
-        ])->assertRedirect('/pagos');
 
         $this->assertDatabaseHas('pedidos', [
             'id' => $pedido->id,
@@ -360,6 +431,18 @@ class CatalogListingTest extends TestCase
             'pedido_id' => $pedido->id,
             'metodo_pago' => 'efectivo',
         ]);
+        $this->assertDatabaseHas('pedido_producto', [
+            'pedido_id' => $pedido->id,
+            'producto_id' => $producto->id,
+        ]);
         $this->assertSame(1, Pago::where('pedido_id', $pedido->id)->count());
+    }
+
+    private function fakePng(string $name): UploadedFile
+    {
+        return UploadedFile::fake()->createWithContent(
+            $name,
+            base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+        );
     }
 }

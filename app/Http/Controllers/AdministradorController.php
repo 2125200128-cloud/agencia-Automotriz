@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrador;
 use App\Models\Cita;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -160,13 +160,13 @@ class AdministradorController extends Controller
         $archivo = $request->file('imagen');
         $nombre = 'administrador_' . $id . '.' . $archivo->getClientOriginalExtension();
 
-        return $archivo->storeAs('administradores', $nombre, 'public');
+        return PublicImage::storeAsUrl($archivo, 'administradores', $nombre);
     }
 
     private function borrarImagen(?string $anterior, ?string $nueva = null): void
     {
-        if ($anterior && $anterior !== $nueva && Storage::disk('public')->exists($anterior)) {
-            Storage::disk('public')->delete($anterior);
+        if ($anterior && $anterior !== $nueva) {
+            PublicImage::delete($anterior);
         }
     }
 
@@ -197,9 +197,7 @@ class AdministradorController extends Controller
         $kilometraje = (int)$request->input('kilometraje');
         $condicion = $request->input('condicion');
 
-        // Algoritmo de valuación realista basado en depreciación
-        // Base estimada de precio original
-        $precioBase = 450000; // Valor base por defecto
+        $precioBase = 450000;
         
         $marcaLower = strtolower($marca);
         if (str_contains($marcaLower, 'audi') || str_contains($marcaLower, 'bmw') || str_contains($marcaLower, 'mercedes')) {
@@ -212,15 +210,12 @@ class AdministradorController extends Controller
             $precioBase = 320000;
         }
 
-        // Depreciación por año (8% anual acumulado)
         $aniosTranscurridos = max(0, date('Y') - $anio);
         $precioDepreciado = $precioBase * pow(0.92, $aniosTranscurridos);
 
-        // Depreciación por kilometraje (3% por cada 20,000 km, máx 40%)
         $depreciacionKm = min(0.40, ($kilometraje / 20000) * 0.03);
         $precioDepreciado = $precioDepreciado * (1 - $depreciacionKm);
 
-        // Multiplicador por condición
         $multiplicadoresCondicion = [
             'excelente' => 1.0,
             'buena' => 0.90,
@@ -228,10 +223,9 @@ class AdministradorController extends Controller
             'mala' => 0.50,
         ];
         $multiplicador = $multiplicadoresCondicion[$condicion] ?? 0.75;
-        $valorFinalCompra = max($precioBase * 0.08, $precioDepreciado * $multiplicador); // Nunca vale menos del 8% de su valor original
+        $valorFinalCompra = max($precioBase * 0.08, $precioDepreciado * $multiplicador);
 
-        // Calcular rangos
-        $valorVentaSugerido = $valorFinalCompra * 1.22; // Margen de ganancia de la agencia de 22%
+        $valorVentaSugerido = $valorFinalCompra * 1.22;
         $rangoMercadoBajo = $valorVentaSugerido * 0.93;
         $rangoMercadoAlto = $valorVentaSugerido * 1.07;
 

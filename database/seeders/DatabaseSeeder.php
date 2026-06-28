@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
             'usuario' => 'carlos.gomez',
             'contrasena' => Hash::make('secret'),
             'imagen' => 'admin1.png',
-            'rol' => 'SuperAdmin',
+            'rol' => Administrador::ROL_MASTER,
             'estado' => 'activo'
         ]);
         Administrador::create([
@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
             'usuario' => 'ana.martinez',
             'contrasena' => Hash::make('secret'),
             'imagen' => 'admin2.png',
-            'rol' => 'Ventas',
+            'rol' => Administrador::ROL_VENDEDOR,
             'estado' => 'activo'
         ]);
         Administrador::create([
@@ -109,7 +109,17 @@ class DatabaseSeeder extends Seeder
             'usuario' => 'david.ruiz',
             'contrasena' => Hash::make('secret'),
             'imagen' => 'admin3.png',
-            'rol' => 'Inventario',
+            'rol' => Administrador::ROL_ALMACENISTA,
+            'estado' => 'activo'
+        ]);
+        Administrador::create([
+            'nombres' => 'Beatriz',
+            'apellidos' => 'Base',
+            'correo' => 'base@agencia.com',
+            'usuario' => 'base.agencia',
+            'contrasena' => Hash::make('secret'),
+            'imagen' => 'admin4.png',
+            'rol' => Administrador::ROL_BASE,
             'estado' => 'activo'
         ]);
 

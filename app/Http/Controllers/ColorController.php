@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Color;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,12 +25,12 @@ class ColorController extends Controller
     {
         $color = new Color();
         $color->nombre = $request->input('nombre');
+        $color->save();
 
         if ($request->hasFile('imagen')) {
-            $color->imagen = $request->file('imagen')->store('colores', 'public');
+            $color->imagen = $this->guardarImagen($request, $color->id);
+            $color->save();
         }
-
-        $color->save();
 
         return redirect('/colores')->with('success', 'Color guardado exitosamente.');
     }
@@ -76,7 +77,8 @@ class ColorController extends Controller
         $color->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
-            $color->imagen = $request->file('imagen')->store('colores', 'public');
+            PublicImage::delete($color->imagen);
+            $color->imagen = $this->guardarImagen($request, $color->id);
         }
 
         $color->save();
@@ -103,8 +105,17 @@ class ColorController extends Controller
             abort(404);
         }
 
+        PublicImage::delete($color->imagen);
         $color->delete();
 
         return redirect('/colores')->with('success', 'Color eliminado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen');
+        $nombre = 'color_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'colores', $nombre);
     }
 }

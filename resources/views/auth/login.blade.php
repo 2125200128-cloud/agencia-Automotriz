@@ -27,7 +27,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ url('/login') }}" method="POST" class="space-y-5">
+                    <form action="{{ route('login') }}" method="POST" class="space-y-5">
                         @csrf
                         <div>
                             <label for="usuario" class="vm-input-label">Usuario</label>
@@ -43,6 +43,17 @@
                             Iniciar sesion
                         </button>
                     </form>
+
+                    <div class="my-6 flex items-center gap-3">
+                        <div class="h-px flex-1 bg-gray-200"></div>
+                        <span class="text-xs font-black uppercase tracking-widest text-gray-400">Clientes</span>
+                        <div class="h-px flex-1 bg-gray-200"></div>
+                    </div>
+
+                    <a href="{{ route('cliente.login') }}" class="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-5 py-4 text-base font-black text-black transition hover:border-[#1c69d4] hover:bg-[#f7fbff]">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 text-sm font-black text-[#1c69d4]">G</span>
+                        Acceso clientes con Google
+                    </a>
                 </div>
             </div>
         </section>

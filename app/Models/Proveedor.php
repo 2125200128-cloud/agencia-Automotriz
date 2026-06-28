@@ -20,8 +20,16 @@ class Proveedor extends Model
         'telefono',
         'correo',
         'direccion',
+        'imagen',
         'estado',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'direccion' => 'encrypted',
+        ];
+    }
 
     public function productos(): HasMany
     {

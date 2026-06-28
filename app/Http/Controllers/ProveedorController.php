@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proveedor;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProveedorController extends Controller
 {
@@ -22,6 +24,12 @@ class ProveedorController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['required', 'image', 'max:2048'],
+            'estado' => ['nullable', Rule::in(['activo', 'inactivo'])],
+        ]);
+
         $proveedor = new Proveedor();
         $proveedor->nombre = $request->input('nombre', $request->input('nombre_empresa'));
         $proveedor->contacto = $request->input('contacto', $request->input('nombre_representante'));
@@ -30,6 +38,11 @@ class ProveedorController extends Controller
         $proveedor->direccion = $request->input('direccion');
         $proveedor->estado = $request->input('estado', 'activo');
         $proveedor->save();
+
+        if ($request->hasFile('imagen')) {
+            $proveedor->imagen = $this->guardarImagen($request, $proveedor->id);
+            $proveedor->save();
+        }
 
         return redirect('/proveedor')->with('success', 'Proveedor guardado exitosamente.');
     }
@@ -70,7 +83,8 @@ class ProveedorController extends Controller
             'telefono' => ['nullable', 'string', 'max:255'],
             'correo' => ['nullable', 'email', 'max:255'],
             'direccion' => ['nullable', 'string'],
-            'estado' => ['required', 'string', 'max:255'],
+            'imagen' => ['nullable', 'image', 'max:2048'],
+            'estado' => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
 
         if ($validator->fails()) {
@@ -83,6 +97,13 @@ class ProveedorController extends Controller
         $proveedor->correo = $request->input('correo');
         $proveedor->direccion = $request->input('direccion');
         $proveedor->estado = $request->input('estado');
+
+        if ($request->hasFile('imagen')) {
+            $imagenAnterior = $proveedor->imagen;
+            $proveedor->imagen = $this->guardarImagen($request, $proveedor->id);
+            $this->borrarImagen($imagenAnterior, $proveedor->imagen);
+        }
+
         $proveedor->save();
 
         return redirect('/proveedor')->with('success', 'Proveedor actualizado exitosamente.');
@@ -107,8 +128,25 @@ class ProveedorController extends Controller
             abort(404);
         }
 
+        $imagen = $proveedor->imagen;
         $proveedor->delete();
+        $this->borrarImagen($imagen);
 
         return redirect('/proveedor')->with('success', 'Proveedor eliminado exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen');
+        $nombre = 'proveedor_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'proveedores', $nombre);
+    }
+
+    private function borrarImagen(?string $anterior, ?string $nueva = null): void
+    {
+        if ($anterior && $anterior !== $nueva) {
+            PublicImage::delete($anterior);
+        }
     }
 }

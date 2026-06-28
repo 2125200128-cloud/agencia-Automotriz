@@ -19,7 +19,7 @@ class EnsureAdminIsActive
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect('/login')->withErrors([
+            return redirect('/veloce-interno')->withErrors([
                 'status' => 'Esta cuenta se encuentra desactivada.',
             ]);
         }

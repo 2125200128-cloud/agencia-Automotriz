@@ -22,7 +22,7 @@
                                 <td class="vm-table-td">{{ $marca->id }}</td>
                                 <td class="vm-table-td">@include('plantilla.imagen-tabla', ['imagen' => $marca->imagen, 'alt' => $marca->nombre])</td>
                                 <td class="vm-table-td font-bold text-black">{{ $marca->nombre }}</td>
-                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/marcas/{{ $marca->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/marcas/{{ $marca->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a><a href="/marcas/{{ $marca->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a></div></td>
+                                <td class="vm-table-td text-right"><div class="flex justify-end gap-2"><a href="/marcas/{{ $marca->id }}" class="vm-btn-outline !px-3 !py-1 text-xs">Ver</a><a href="/marcas/{{ $marca->id }}/editar" class="vm-btn-solid !px-3 !py-1 text-xs">Editar</a>@if(Auth::guard('admin')->user()?->esMaster())<a href="/marcas/{{ $marca->id }}/eliminar" class="vm-btn-outline !px-3 !py-1 text-xs">Eliminar</a>@endif</div></td>
                             </tr>
                         @empty
                             <tr><td colspan="4" class="vm-table-td py-10 text-center">No hay marcas registradas.</td></tr>

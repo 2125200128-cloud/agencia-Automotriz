@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Support\PublicImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,14 +23,20 @@ class MarcaController extends Controller
 
     public function guardar(Request $request)
     {
+        $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'imagen' => ['required', 'image', 'max:2048'],
+        ]);
+
         $marca = new Marca();
         $marca->nombre = $request->input('nombre');
 
-        if ($request->hasFile('imagen')) {
-            $marca->imagen = $request->file('imagen')->store('marcas', 'public');
-        }
-
         $marca->save();
+
+        if ($request->hasFile('imagen')) {
+            $marca->imagen = $this->guardarImagen($request, $marca->id);
+            $marca->save();
+        }
 
         return redirect('/marcas')->with('success', 'Marca guardada exitosamente.');
     }
@@ -76,7 +83,9 @@ class MarcaController extends Controller
         $marca->nombre = $request->input('nombre');
 
         if ($request->hasFile('imagen')) {
-            $marca->imagen = $request->file('imagen')->store('marcas', 'public');
+            $imagenAnterior = $marca->imagen;
+            $marca->imagen = $this->guardarImagen($request, $marca->id);
+            $this->borrarImagen($imagenAnterior, $marca->imagen);
         }
 
         $marca->save();
@@ -103,8 +112,25 @@ class MarcaController extends Controller
             abort(404);
         }
 
+        $imagen = $marca->imagen;
         $marca->delete();
+        $this->borrarImagen($imagen);
 
         return redirect('/marcas')->with('success', 'Marca eliminada exitosamente.');
+    }
+
+    private function guardarImagen(Request $request, int $id): string
+    {
+        $archivo = $request->file('imagen');
+        $nombre = 'marca_' . $id . '.' . $archivo->getClientOriginalExtension();
+
+        return PublicImage::storeAsUrl($archivo, 'marcas', $nombre);
+    }
+
+    private function borrarImagen(?string $anterior, ?string $nueva = null): void
+    {
+        if ($anterior && $anterior !== $nueva) {
+            PublicImage::delete($anterior);
+        }
     }
 }

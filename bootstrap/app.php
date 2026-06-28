@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo('/veloce-interno');
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\SetDatabaseAuditUser::class,
+        ]);
+
         $middleware->alias([
             'admin.activo' => \App\Http\Middleware\EnsureAdminIsActive::class,
             'permiso.admin' => \App\Http\Middleware\CheckAdminPermission::class,
